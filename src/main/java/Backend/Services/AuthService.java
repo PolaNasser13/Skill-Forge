@@ -14,8 +14,8 @@ import org.json.JSONObject;
  * @author pola-nasser13
  */
 public class AuthService {
-    StudentDatabase students;
-    InstructorDatabase instructors;
+    private StudentDatabase students;
+    private InstructorDatabase instructors;
     AuthService(){
         students = new StudentDatabase("users.json");
         instructors = new InstructorDatabase("users.json");
@@ -23,7 +23,7 @@ public class AuthService {
         instructors.readFromFile();
     }
     
-    User login(String email, String enteredPassword, String role){
+    public User login(String email, String enteredPassword, String role){
         User user = null;
         if(role.equals("Student")){
         user = students.getStudentByEmail(email);
@@ -42,7 +42,7 @@ public class AuthService {
        return user; 
     }
     
-    boolean signup(String userId, String role, String username, String password, String id){
+   public boolean signup(String userId, String role, String username, String password, String id){
          User user = null;
          boolean insertStatus = false;
         if(role.equals("Student")){
