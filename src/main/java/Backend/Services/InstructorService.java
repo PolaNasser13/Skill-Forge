@@ -5,6 +5,7 @@
 package Backend.Services;
 
 import Backend.Database.CourseDatabase;
+import Backend.Database.InstructorDatabase;
 import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Lesson;
@@ -19,10 +20,12 @@ public class InstructorService {
 
     private CourseDatabase courses;
     private Instructor instructor;
-
+    private InstructorDatabase instructors;
+    
     InstructorService(Instructor instructor) {
         courses = new CourseDatabase("courses.json");
         courses.readFromFile();
+        instructors.readFromFile();
         this.instructor = instructor;
     }
 
@@ -32,6 +35,7 @@ public class InstructorService {
       if(addStatus){
           System.out.println("Added Course successfully!");
           courses.saveToFile();
+          instructors.saveToFile();
       }
         return addStatus;
     }
@@ -44,6 +48,7 @@ public class InstructorService {
     if(deleteStatus){
         System.out.println("Deleted Course successfully!");
           courses.saveToFile();
+          instructors.saveToFile();
     }
     return deleteStatus;
     }
@@ -70,4 +75,14 @@ public class InstructorService {
    public ArrayList<Student> getEnrolledStudents(Course c){
         return c.getStudents();
     }
+   
+   private void save(){
+        courses.saveToFile();
+        instructors.saveToFile();
+    }
+    
+
+    public void logout(){
+        save();
+}
 }
