@@ -12,11 +12,11 @@ public class Lesson implements Info {
     private String content;
     private ArrayList<String> resources;
 
-    public Lesson(int lessonId, String title, String content) {
+    public Lesson(int lessonId, String title, String content, ArrayList<String> resources) {
         setLessonId(lessonId);
         setTitle(title);
         setContent(content);
-        this.resources = new ArrayList<>();
+        this.resources = resources;
     }
 
     public Lesson(JSONObject obj) {
