@@ -53,7 +53,7 @@ public class CourseDatabase extends Database<Course> {
 
         for (int i = 0; i < records.size(); i++) {
             Course c = records.get(i);
-            if (c.getId() == courseId) {
+            if (c.getCourseId() == courseId) {
                 records.remove(i);
                 deleted = true;
                 i--;
@@ -61,24 +61,93 @@ public class CourseDatabase extends Database<Course> {
         }
 
         if (deleted) {
-            System.out.println("Course deleted: " + courseId);
             saveToFile();
-        } else {
-            System.out.println("No course found with ID: " + courseId);
         }
     }
-    
-        public Course getCourseById(int courseId) {
+
+    public Course getCourseById(int courseId) {
         for (int i = 0; i < records.size(); i++) {
             Course c = records.get(i);
-            if (c.getId() == courseId) {
-                return c;
-            }
+            if (c.getCourseId() == courseId) return c;
         }
         return null;
     }
-        
+
     public boolean contains(int courseId) {
         return getCourseById(courseId) != null;
+    }
+
+    public boolean addLesson(int courseId, Lesson lesson) {
+        Course c = getCourseById(courseId);
+        if (c == null) return false;
+
+        boolean added = c.addLesson(lesson);
+        if (added) saveToFile();
+        return added;
+    }
+
+    public boolean updateLesson(int courseId, Lesson lesson) {
+        Course c = getCourseById(courseId);
+        if (c == null) return false;
+
+        ArrayList<Lesson> lessons = c.getLessons();
+        for (int i = 0; i < lessons.size(); i++) {
+            if (lessons.get(i).getLessonId() == lesson.getLessonId()) {
+                lessons.set(i, lesson);
+                saveToFile();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean deleteLesson(int courseId, int lessonId) {
+        Course c = getCourseById(courseId);
+        if (c == null) return false;
+
+        ArrayList<Lesson> lessons = c.getLessons();
+        for (int i = 0; i < lessons.size(); i++) {
+            if (lessons.get(i).getLessonId() == lessonId) {
+                boolean removed = c.removeLesson(lessons.get(i));
+                if (removed) {
+                    saveToFile();
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean enrollStudent(int courseId, Student student) {
+        Course c = getCourseById(courseId);
+        if (c == null) return false;
+
+        boolean enrolled = c.enrollStudent(student);
+        if (enrolled) saveToFile();
+        return enrolled;
+    }
+
+    public boolean removeStudent(int courseId, Student student) {
+        Course c = getCourseById(courseId);
+        if (c == null) return false;
+
+        c.removeStudent(student);
+        saveToFile();
+        return true;
+    }
+
+    public boolean updateCourse(Course course) {
+        for (int i = 0; i < records.size(); i++) {
+            if (records.get(i).getCourseId() == course.getCourseId()) {
+                records.set(i, course);
+                saveToFile();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public ArrayList<Course> getAllCourses() {
+        return records;
     }
 }
