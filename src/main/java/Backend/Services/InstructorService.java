@@ -57,7 +57,7 @@ public class InstructorService {
     }
     
    public boolean addLesson(Course c, int lessonId, String title, String content, ArrayList<String> optionalResources) {
-        Lesson newLesson = new Lesson(lessonId, title, content);
+        Lesson newLesson = new Lesson(lessonId, title, content, optionalResources);
       boolean addStatus = courses.addLesson(c.getCourseId(), newLesson);
       if(addStatus){
           System.out.println("Added Lesson successfully!");
