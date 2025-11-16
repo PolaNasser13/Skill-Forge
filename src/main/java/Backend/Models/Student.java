@@ -4,10 +4,19 @@
  */
 package Backend.Models;
 
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+
 /**
  *
- * @author pola-nasser13
+ * @author Mohamed Walaa
  */
+
+
+
+
+
 public class Student extends User {
     
 }
