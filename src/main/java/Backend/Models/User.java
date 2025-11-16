@@ -29,78 +29,20 @@ protected String role; //student or instructor
 
 
 public User(int userId, String username, String email, String password, String role) {
-
-    try {
+    
+    if (userId > 0)
         this.userId = userId;
-        if (this.userId <= 0) {
-            System.out.println("userId must be positive. Defaulting to 0");
-            this.userId = 0;
-        }
-    } catch (Exception e) {
-        System.out.println("Invalid userId in JSON. Defaulting to 0");
+    else{
+        System.out.println("userId must be positive. Defaulting to 0");
         this.userId = 0;
     }
 
-
-
-    try {
-    if (username == null || username.trim().isEmpty()) {
-        throw new Exception("Username is empty");
-    }
-    username = username.trim();
-
-    for (int i = 0; i < username.length(); i++) {
-        char c = username.charAt(i);
-        if (!Character.isLetter(c)) {
-            throw new Exception("Username contains invalid character");
-        }
-    }
-
-    this.username = username;
-
-    } catch (Exception e) {
-        System.out.println("Invalid username: " + e.getMessage() + ". Defaulting to 'User'");
-        this.username = "User";
-    }
-
-
-
-
-
-
-    try {
-    if (email == null) throw new Exception("Email is null");
-
-    email = email.trim();
-    int atPos = email.indexOf("@");
-    int dotPos = email.lastIndexOf(".");
-
-    if (atPos <= 0 || dotPos <= atPos + 1 || dotPos == email.length() - 1) {
-        throw new Exception("Email format is invalid");
-    }
-
-    this.email = email;
-    } catch (Exception e) {
-        System.out.println("Invalid email. Defaulting to 'user@example.com'");
-        this.email = "user@example.com";
-    }
-
-
-
-
-    if (password == null || password.length() < 4) {
-        System.out.println("Password too short. Defaulting to '1234'");
-        password = "1234";
-    }
-    this.passwordHash = hashPassword(password);
-
-    if(role == null || (!role.equalsIgnoreCase("student") && !role.equalsIgnoreCase("instructor"))) {
-        System.out.println("Invalid role. Defaulting to 'student'");
-        this.role = "student";
-    } else {
-        this.role = role.toLowerCase();
-    }
+    setUsername(username);
+    setEmail(email);
+    setPassword(password);
+    setRole(role);
 }
+
 
 
 public User(JSONObject j) {
@@ -115,13 +57,13 @@ public User(JSONObject j) {
 
 
 
-    // Hash password using SHA-256
+    //Hash password using SHA-256
     private String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             byte[] hash = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();
-            for (byte b : hash) sb.append(String.format("%02x", b));  //each byte of the hash is converted into two hexadecimal characters.
+            for (byte b : hash) sb.append(String.format("%02x", b));
             return sb.toString();
         } catch (NoSuchAlgorithmException e) {
             return null;
