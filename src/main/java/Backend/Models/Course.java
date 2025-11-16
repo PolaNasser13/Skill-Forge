@@ -83,19 +83,15 @@ public class Course {
             return false;
         }
     }
-    public void enrollStudent(Student student){
-    boolean found=false;
-    for(int i=0;i<students.size();i++){
-    if(students.indexOf(i).getUserId()== student.getUserId){
-    found=true;
-    break;
+    public boolean enrollStudent(Student student) {
+    for (int i = 0; i < students.size(); i++) {
+        if (students.get(i).getUserId() == student.getUserId()) {
+       return false; 
+        }
     }
-    }
-    if(!found){
     students.add(student);
-    }
-   
-    }
+    return true;
+}
     public void removeStudent(Student student){
         for(int i=0;i<students.size();i++){
             if(students.indexOf(i).getUserId()==student.getUserId()){
