@@ -4,19 +4,20 @@ import Backend.Database.Info;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Lesson implements Info {
 
     private int lessonId;
     private String title;
     private String content;
-    private ArrayList<String> resources;
+    private List<String> resources; // Use interface type List
 
-    public Lesson(int lessonId, String title, String content, ArrayList<String> resources) {
+    public Lesson(int lessonId, String title, String content, List<String> resources) {
         setLessonId(lessonId);
         setTitle(title);
         setContent(content);
-        this.resources = resources;
+        this.resources = resources != null ? new ArrayList<>(resources) : new ArrayList<>();
     }
 
     public Lesson(JSONObject obj) {
@@ -33,25 +34,13 @@ public class Lesson implements Info {
     }
 
     public boolean addResource(String resource) {
-        for (int i = 0; i < resources.size(); i++) {
-            if (resources.get(i).equals(resource)) {
-                return false;
-            }
-        }
+        if (resource == null || resources.contains(resource)) return false;
         resources.add(resource);
         return true;
     }
 
     public boolean removeResource(String resource) {
-        boolean removed = false;
-        for (int i = 0; i < resources.size(); i++) {
-            if (resources.get(i).equals(resource)) {
-                resources.remove(i);
-                removed = true;
-                i--;
-            }
-        }
-        return removed;
+        return resources.remove(resource);
     }
 
     @Override
@@ -60,11 +49,7 @@ public class Lesson implements Info {
         obj.put("lessonId", lessonId);
         obj.put("title", title);
         obj.put("content", content);
-        JSONArray arr = new JSONArray();
-        for (int i = 0; i < resources.size(); i++) {
-            arr.put(resources.get(i));
-        }
-        obj.put("resources", arr);
+        obj.put("resources", new JSONArray(resources));
         return obj;
     }
 
@@ -80,25 +65,31 @@ public class Lesson implements Info {
         return content;
     }
 
-    public ArrayList<String> getResources() {
+    public List<String> getResources() {
         return resources;
     }
 
     public void setLessonId(int lessonId) {
-        if (lessonId <= 0) {
-            throw new IllegalArgumentException("lessonId must be > 0");
-        }
+        if (lessonId <= 0) throw new IllegalArgumentException("lessonId must be > 0");
         this.lessonId = lessonId;
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = title != null ? title : "";
     }
 
     public void setContent(String content) {
-        this.content = content;
+        this.content = content != null ? content : "";
     }
     
+    public void setResources(List<String> newResources) {
+    if (newResources != null) {
+        this.resources = new ArrayList<>(newResources);
+    } else {
+        this.resources = new ArrayList<>();
+    }
+}
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

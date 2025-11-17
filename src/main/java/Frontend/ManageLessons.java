@@ -2,14 +2,16 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
-package courses;
+package Frontend;
 
 import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Lesson;
 import Backend.Services.InstructorService;
 import java.util.ArrayList;
+import java.util.Arrays;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -63,7 +65,6 @@ public class ManageLessons extends javax.swing.JPanel {
         jLabel9 = new javax.swing.JLabel();
         tfuContent = new javax.swing.JTextField();
         btnUpdate = new javax.swing.JButton();
-        btnRefresh = new javax.swing.JButton();
         btnDelete = new javax.swing.JButton();
         jLabel10 = new javax.swing.JLabel();
         tfResources = new javax.swing.JTextField();
@@ -179,14 +180,6 @@ public class ManageLessons extends javax.swing.JPanel {
             }
         });
 
-        btnRefresh.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnRefresh.setText("Refresh");
-        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshActionPerformed(evt);
-            }
-        });
-
         btnDelete.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnDelete.setText("Delete");
         btnDelete.addActionListener(new java.awt.event.ActionListener() {
@@ -242,11 +235,8 @@ public class ManageLessons extends javax.swing.JPanel {
                                 .addGap(59, 59, 59)
                                 .addComponent(btnAdd)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnRefresh)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnDelete))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnDelete, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(12, 12, 12)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -330,9 +320,7 @@ public class ManageLessons extends javax.swing.JPanel {
                         .addGap(38, 38, 38)
                         .addComponent(btnUpdate)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnRefresh)
-                    .addComponent(btnDelete))
+                .addComponent(btnDelete)
                 .addContainerGap(21, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -350,19 +338,15 @@ public class ManageLessons extends javax.swing.JPanel {
     }//GEN-LAST:event_tfuContentActionPerformed
 
     private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
-        if(selectedLesson == null) return;
+        if (selectedLesson == null) return;
         selectedLesson.setTitle(tfuTitle.getText());
         selectedLesson.setContent(tfuContent.getText());
-        ArrayList<String> res = new ArrayList<>();
-        if(!tfuResources.getText().isEmpty()) res.add(tfuResources.getText());
-        selectedLesson.setOptionalResources(res);
+        ArrayList<String> res = new ArrayList<>(Arrays.asList(tfuResources.getText().split(",")));
+        selectedLesson.setResources(res);
+
         instructorService.editLesson(selectedCourse, selectedLesson);
         loadLessons(selectedCourse);
       }//GEN-LAST:event_btnUpdateActionPerformed
-
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnRefreshActionPerformed
 
     private void tfuResourcesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfuResourcesActionPerformed
         // TODO add your handling code here:
@@ -373,7 +357,7 @@ public class ManageLessons extends javax.swing.JPanel {
     }//GEN-LAST:event_tfResourcesActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        if(selectedCourse == null) {
+       if (selectedCourse == null) {
             JOptionPane.showMessageDialog(this, "Select a course first!");
             return;
         }
@@ -381,21 +365,22 @@ public class ManageLessons extends javax.swing.JPanel {
             int id = Integer.parseInt(tfLessonId.getText());
             String title = tfTitle.getText();
             String content = tfContent.getText();
-            ArrayList<String> resources = new ArrayList<>();
-            if(!tfResources.getText().isEmpty()) resources.add(tfResources.getText());
+            ArrayList<String> resources = new ArrayList<>(Arrays.asList(tfResources.getText().split(",")));
 
             boolean added = instructorService.addLesson(selectedCourse, id, title, content, resources);
-            if(added) loadLessons(selectedCourse);
-        } catch(Exception ex) {
+            if (added) loadLessons(selectedCourse);
+        } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, "Invalid input!");
         }
+    
      }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        if(selectedLesson == null) return;
+        if (selectedLesson == null) return;
         int confirm = JOptionPane.showConfirmDialog(this, "Are you sure?", "Delete Lesson", JOptionPane.YES_NO_OPTION);
-        if(confirm == JOptionPane.YES_OPTION) {
-            instructorService.deleteLesson(selectedCourse, selectedLesson.getLessonId(), selectedLesson.getTitle(), selectedLesson.getContent());
+        if (confirm == JOptionPane.YES_OPTION) {
+            instructorService.deleteLesson(selectedCourse, selectedLesson.getLessonId(),
+                    selectedLesson.getTitle(), selectedLesson.getContent());
             loadLessons(selectedCourse);
         }    }//GEN-LAST:event_btnDeleteActionPerformed
 
@@ -403,11 +388,51 @@ public class ManageLessons extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_tfContentActionPerformed
 
+     private void addListeners() {
+        coursesTable.getSelectionModel().addListSelectionListener(e -> {
+            int row = coursesTable.getSelectedRow();
+            if (row >= 0) {
+                int courseId = (int) coursesTable.getValueAt(row, 0);
+                selectedCourse = instructorService.getCourseById(courseId);
+                loadLessons(selectedCourse);
+            }
+        });
 
+        lessonsTable.getSelectionModel().addListSelectionListener(e -> {
+            int row = lessonsTable.getSelectedRow();
+            if (row >= 0 && selectedCourse != null) {
+                int lessonId = (int) lessonsTable.getValueAt(row, 0);
+                selectedLesson = selectedCourse.getLessonById(lessonId);
+                tfuLessonId.setText(String.valueOf(selectedLesson.getLessonId()));
+                tfuTitle.setText(selectedLesson.getTitle());
+                tfuContent.setText(selectedLesson.getContent());
+                tfuResources.setText(String.join(",", selectedLesson.getResources()));
+            }
+        });
+    }
+
+
+
+    private void loadCourses() {
+        DefaultTableModel model = (DefaultTableModel) coursesTable.getModel();
+        model.setRowCount(0);
+        for (int courseId : instructorService.getCreatedCoursesIds()) {
+            Course c = instructorService.getCourseById(courseId);
+            model.addRow(new Object[]{c.getCourseId(), c.getTitle(), c.getDescription(), c.getInstructorId()});
+        }
+    }
+
+    private void loadLessons(Course course) {
+        if (course == null) return;
+        DefaultTableModel model = (DefaultTableModel) lessonsTable.getModel();
+        model.setRowCount(0);
+        for (Lesson l : instructorService.getLessons(course)) {
+            model.addRow(new Object[]{l.getLessonId(), l.getTitle(), l.getContent(), String.join(",", l.getResources())});
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
-    private javax.swing.JButton btnRefresh;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JTable coursesTable;
     private javax.swing.JLabel jLabel1;

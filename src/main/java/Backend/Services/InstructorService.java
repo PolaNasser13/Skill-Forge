@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Backend.Services;
 
 import Backend.Database.CourseDatabase;
@@ -9,99 +5,113 @@ import Backend.Database.InstructorDatabase;
 import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Lesson;
-import Backend.Models.Student;
 import java.util.ArrayList;
 import org.json.JSONObject;
-/**
- *
- * @author pola-nasser13
- */
+
 public class InstructorService {
 
     private CourseDatabase courses;
-    private Instructor instructor;
     private InstructorDatabase instructors;
-    
+    private Instructor instructor;
+
     public InstructorService(Instructor instructor) {
+        this.instructor = instructor;
         courses = new CourseDatabase("courses.json");
         courses.readFromFile();
+        instructors = new InstructorDatabase("instructors.json"); // make sure the filename matches
         instructors.readFromFile();
-        this.instructor = instructor;
     }
 
-   public boolean createCourse(int courseId, String title, String description) {
+    public boolean createCourse(int courseId, String title, String description) {
         Course newCourse = new Course(courseId, title, description, instructor.getUserId());
-        JSONObject jsonCourse = newCourse.toJSON();
-      boolean addStatus = courses.insertRecord(jsonCourse);
-      if(addStatus){
-          System.out.println("Added Course successfully!");
-      }
+        boolean addStatus = courses.insertRecord(newCourse.toJSON());
+        if (addStatus) {
+            System.out.println("Added Course successfully!");
+            instructor.addCourseId(courseId);
+            save(); // persist changes
+        }
         return addStatus;
     }
-   public boolean editCourse(Course c){
+
+    public boolean editCourse(Course c) {
         boolean updateStatus = courses.updateCourse(c);
-        if(updateStatus){
+        if (updateStatus) {
             System.out.println("Course updated successfully!");
+            save();
             return true;
         }
         System.out.println("Failed to edit! Course not found.");
         return false;
     }
-    
-   public boolean deleteCourse(Course c){
-    boolean deleteStatus = courses.deleteCourse(c.getCourseId());
-    if(deleteStatus){
-        System.out.println("Deleted Course successfully!");
+
+    public boolean deleteCourse(Course c) {
+        boolean deleteStatus = courses.deleteCourse(c.getCourseId());
+        if (deleteStatus) {
+            System.out.println("Deleted Course successfully!");
+            instructor.getCreatedCourseIds().remove((Integer)c.getCourseId());
+            save();
+        }
+        return deleteStatus;
     }
-    return deleteStatus;
+
+    public Course getCourseById(int id) {
+        Course c = courses.getCourseById(id);
+        if (c == null) {
+            System.out.println("Course not found.");
+        } else {
+            System.out.println("Course found successfully!");
+        }
+        return c;
     }
-    
-   public boolean addLesson(Course c, int lessonId, String title, String content, ArrayList<String> optionalResources) {
+
+    public boolean addLesson(Course c, int lessonId, String title, String content, ArrayList<String> optionalResources) {
         Lesson newLesson = new Lesson(lessonId, title, content, optionalResources);
-      boolean addStatus = courses.addLesson(c.getCourseId(), newLesson);
-      if(addStatus){
-          System.out.println("Added Lesson successfully!");
-      }
+        boolean addStatus = courses.addLesson(c.getCourseId(), newLesson);
+        if (addStatus) {
+            System.out.println("Added Lesson successfully!");
+            save();
+        }
         return addStatus;
     }
-   public boolean deleteLesson(Course c, int lessonId, String title, String content){
-        
-    boolean deleteStatus = courses.deleteLesson(c.getCourseId(), lessonId);
-    if(deleteStatus){
-        System.out.println("Deleted Course successfully!");
+
+    public boolean deleteLesson(Course c, int lessonId, String title, String content) {
+        boolean deleteStatus = courses.deleteLesson(c.getCourseId(), lessonId);
+        if (deleteStatus) {
+            System.out.println("Deleted Lesson successfully!");
+            save();
+        }
+        return deleteStatus;
     }
-    return deleteStatus;
-    }
-    
-   public boolean editLesson(Course c, Lesson l){
-       boolean updateStatus = courses.updateLesson(c.getCourseId(), l);
-        if(updateStatus){
+
+    public boolean editLesson(Course c, Lesson l) {
+        boolean updateStatus = courses.updateLesson(c.getCourseId(), l);
+        if (updateStatus) {
             System.out.println("Lesson updated successfully!");
+            save();
             return true;
         }
-        System.out.println("Failed to edit! Course not found.");
+        System.out.println("Failed to edit! Lesson not found.");
         return false;
-   }
-   
-   public ArrayList<Integer> getEnrolledStudentsIds(Course c){
+    }
+
+    public ArrayList<Integer> getEnrolledStudentsIds(Course c) {
         return c.getStudentIds();
     }
-   
-   public ArrayList<Lesson> getLessons(Course c){
+
+    public ArrayList<Lesson> getLessons(Course c) {
         return c.getLessons();
     }
-    
-   public ArrayList<Integer> getCreatedCoursesIds(){
-       return instructor.getCreatedCourseIds();
-   }
-   
-   private void save(){
+
+    public ArrayList<Integer> getCreatedCoursesIds() {
+        return instructor.getCreatedCourseIds();
+    }
+
+    private void save() {
         courses.saveToFile();
         instructors.saveToFile();
-    }   
-   
-   
-    public void logout(){
+    }
+
+    public void logout() {
         save();
-}
+    }
 }
