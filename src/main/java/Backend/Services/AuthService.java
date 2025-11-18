@@ -38,8 +38,4 @@ public class AuthService {
         }
         return false;
     }
-
-    public UserDatabase getUserDatabase() {
-        return userDB;
-    }
 }
