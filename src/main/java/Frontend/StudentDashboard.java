@@ -12,6 +12,7 @@ import Backend.Models.Student;
 import Backend.Services.CourseService;
 import Backend.Services.StudentService;
 import java.util.ArrayList;
+import javax.swing.JFrame;
 
 
 
@@ -25,6 +26,8 @@ public class StudentDashboard extends javax.swing.JPanel {
     private DefaultTableModel availableModel;
     private DefaultTableModel enrolledModel;
     private DefaultTableModel lessonsModel;
+    private int selectedCourseId = -1; 
+    private String selectedCourseName = ""; 
     
     public StudentDashboard(Student student) {
         studentService = new StudentService(student);
@@ -60,6 +63,7 @@ public class StudentDashboard extends javax.swing.JPanel {
         jLabel3 = new javax.swing.JLabel();
         incompLessonButton = new javax.swing.JButton();
         compLessonButton = new javax.swing.JButton();
+        btnback = new javax.swing.JButton();
 
         setName(""); // NOI18N
 
@@ -171,6 +175,15 @@ public class StudentDashboard extends javax.swing.JPanel {
             }
         });
 
+        btnback.setBackground(new java.awt.Color(255, 0, 0));
+        btnback.setForeground(new java.awt.Color(255, 255, 255));
+        btnback.setText("Back");
+        btnback.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbackActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -178,58 +191,63 @@ public class StudentDashboard extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(jLabel2)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(78, 78, 78)
-                                .addComponent(jLabel2))
-                            .addGroup(layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(compLessonButton, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(106, 106, 106)
-                                .addComponent(jLabel1)
-                                .addGap(155, 155, 155)
-                                .addComponent(jLabel3)
-                                .addGap(38, 70, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(161, 161, 161)
-                        .addComponent(enroll)
-                        .addGap(354, 354, 354)
-                        .addComponent(accesslessons)
+                                .addComponent(incompLessonButton))
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(87, 87, 87)
+                        .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(incompLessonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(compLessonButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(54, 54, 54)))
-                .addContainerGap())
+                        .addComponent(jLabel3)
+                        .addGap(85, 85, 85)))
+                .addContainerGap(17, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(145, 145, 145)
+                .addComponent(enroll)
+                .addGap(326, 326, 326)
+                .addComponent(accesslessons)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(131, 131, 131))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(41, 41, 41)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3))
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(incompLessonButton)
+                            .addComponent(compLessonButton))))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(enroll)
                     .addComponent(accesslessons)
-                    .addComponent(compLessonButton))
-                .addGap(18, 18, 18)
-                .addComponent(incompLessonButton)
-                .addContainerGap(38, Short.MAX_VALUE))
+                    .addComponent(btnback))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -288,14 +306,17 @@ public class StudentDashboard extends javax.swing.JPanel {
     }
     
     private void accesslessonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accesslessonsActionPerformed
-        int selectedRow = enrolledCoursesTable.getSelectedRow();
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a course first.");
-            return;
-        }
+    int selectedRow = enrolledCoursesTable.getSelectedRow();
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a course first.");
+        return;
+    }
 
-        int courseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
-        loadLessonsForCourse(courseId);                          
+    selectedCourseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
+    selectedCourseName = (String) enrolledModel.getValueAt(selectedRow, 1);
+    loadLessonsForCourse(selectedCourseId);
+    
+    jLabel3.setText("Lessons - " + selectedCourseName);                         
     }//GEN-LAST:event_accesslessonsActionPerformed
 
     private void enrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enrollActionPerformed
@@ -318,61 +339,71 @@ public class StudentDashboard extends javax.swing.JPanel {
     }//GEN-LAST:event_enrollActionPerformed
 
     private void incompLessonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_incompLessonButtonActionPerformed
-        int selectedLessonRow = lessonTable.getSelectedRow();
-        if (selectedLessonRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a lesson first.");
-            return;
-        }
+    if (selectedCourseId == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a course first using 'ACCESS LESSONS'.");
+        return;
+    }
+    
+    int selectedLessonRow = lessonTable.getSelectedRow();
+    if (selectedLessonRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
+        return;
+    }
 
-        int selectedCourseRow = enrolledCoursesTable.getSelectedRow();
-        if (selectedCourseRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a course first.");
-            return;
-        }
+    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
 
-        int courseId = (Integer) enrolledModel.getValueAt(selectedCourseRow, 0);
-        int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
+    boolean success = studentService.unmarkLesson(selectedCourseId, lessonId);
+    if (success) {
+        loadLessonsForCourse(selectedCourseId);
+        loadEnrolledCourses();
+        JOptionPane.showMessageDialog(this, "Lesson marked as incomplete.");
+    } else {
+        JOptionPane.showMessageDialog(this, "Failed to mark lesson as incomplete.");
+    }
 
-        boolean success = studentService.unmarkLesson(courseId, lessonId);
-        if (success) {
-            loadLessonsForCourse(courseId);
-            loadEnrolledCourses();
-            JOptionPane.showMessageDialog(this, "Lesson marked as incomplete.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to mark lesson as incomplete.");
-        }
     }//GEN-LAST:event_incompLessonButtonActionPerformed
 
     private void compLessonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compLessonButtonActionPerformed
-        int selectedLessonRow = lessonTable.getSelectedRow();
-        if (selectedLessonRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a lesson first.");
-            return;
-        }
+    if (selectedCourseId == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a course first using 'ACCESS LESSONS'.");
+        return;
+    }
+    
+    int selectedLessonRow = lessonTable.getSelectedRow();
+    if (selectedLessonRow == -1) {
+        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
+        return;
+    }
 
-        int selectedCourseRow = enrolledCoursesTable.getSelectedRow();
-        if (selectedCourseRow == -1) {
-            JOptionPane.showMessageDialog(this, "Please select a course first.");
-            return;
-        }
+    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
 
-        int courseId = (Integer) enrolledModel.getValueAt(selectedCourseRow, 0);
-        int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
-
-        boolean success = studentService.completeLesson(courseId, lessonId);
-        if (success) {
-            loadLessonsForCourse(courseId);
-            loadEnrolledCourses();
-            JOptionPane.showMessageDialog(this, "Lesson marked as complete.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Failed to mark lesson as complete.");
-        }        
+    boolean success = studentService.completeLesson(selectedCourseId, lessonId);
+    if (success) {
+        loadLessonsForCourse(selectedCourseId);
+        loadEnrolledCourses();
+        JOptionPane.showMessageDialog(this, "Lesson marked as complete.");
+    } else {
+        JOptionPane.showMessageDialog(this, "Failed to mark lesson as complete.");
+    }       
     }//GEN-LAST:event_compLessonButtonActionPerformed
+
+    private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
+    JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+    currentFrame.dispose();
+    
+    JFrame signinFrame = new JFrame("Sign In");
+    SignIn signinPanel = new SignIn("Student");
+    signinFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    signinFrame.getContentPane().add(signinPanel);
+    signinFrame.pack();
+    signinFrame.setLocationRelativeTo(null);
+    signinFrame.setVisible(true);    }//GEN-LAST:event_btnbackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accesslessons;
     private javax.swing.JTable availableCourseTable;
+    private javax.swing.JButton btnback;
     private javax.swing.JButton compLessonButton;
     private javax.swing.JButton enroll;
     private javax.swing.JTable enrolledCoursesTable;

@@ -36,6 +36,7 @@ public class InstructorDashboard extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         btnManageCourses = new javax.swing.JButton();
         btnManageLessons = new javax.swing.JButton();
+        btnback = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -43,6 +44,7 @@ public class InstructorDashboard extends javax.swing.JPanel {
 
         btnManageCourses.setBackground(new java.awt.Color(0, 0, 255));
         btnManageCourses.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnManageCourses.setForeground(new java.awt.Color(255, 255, 255));
         btnManageCourses.setText("Manage Courses");
         btnManageCourses.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -52,10 +54,18 @@ public class InstructorDashboard extends javax.swing.JPanel {
 
         btnManageLessons.setBackground(new java.awt.Color(255, 0, 0));
         btnManageLessons.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnManageLessons.setForeground(new java.awt.Color(255, 255, 255));
         btnManageLessons.setText("Manage Lessons");
         btnManageLessons.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnManageLessonsActionPerformed(evt);
+            }
+        });
+
+        btnback.setText("Back");
+        btnback.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnbackActionPerformed(evt);
             }
         });
 
@@ -64,55 +74,79 @@ public class InstructorDashboard extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(79, 79, 79)
+                .addContainerGap()
                 .addComponent(btnManageCourses)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnManageLessons, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(117, 117, 117))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(282, 282, 282)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 228, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(326, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 269, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnManageCourses, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnManageLessons, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(114, 114, 114))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(27, 27, 27)
+                            .addComponent(btnManageCourses, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createSequentialGroup()
+                            .addGap(32, 32, 32)
+                            .addComponent(btnManageLessons, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(20, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnManageCoursesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageCoursesActionPerformed
-//        JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-//        parentFrame.dispose();
+    JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+    parentFrame.dispose();
 
-        JFrame dash = new JFrame("Manage Courses");
-        dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dash.getContentPane().add(new ManageCourse(instructor));
-        dash.pack();
-        dash.setLocationRelativeTo(null);
-        dash.setVisible(true);
-        return;
+    JFrame dash = new JFrame("Manage Courses");
+    dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    dash.getContentPane().add(new ManageCourse(instructor));
+    dash.pack();
+    dash.setLocationRelativeTo(null);
+    dash.setVisible(true);
     }//GEN-LAST:event_btnManageCoursesActionPerformed
 
     private void btnManageLessonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageLessonsActionPerformed
-        JFrame dash = new JFrame("Manage Lessons");
-        dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dash.getContentPane().add(new ManageLessons(instructor));
-        dash.pack();
-        dash.setLocationRelativeTo(null);
-        dash.setVisible(true);
+    JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+    parentFrame.dispose();
+
+    JFrame dash = new JFrame("Manage Lessons");
+    dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    dash.getContentPane().add(new ManageLessons(instructor));
+    dash.pack();
+    dash.setLocationRelativeTo(null);
+    dash.setVisible(true);
     }//GEN-LAST:event_btnManageLessonsActionPerformed
+
+    private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
+    JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+    currentFrame.dispose();
+    
+    JFrame signinFrame = new JFrame("Sign In");
+    SignIn signinPanel = new SignIn("Instructor");
+    signinFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+    signinFrame.getContentPane().add(signinPanel);
+    signinFrame.pack();
+    signinFrame.setLocationRelativeTo(null);
+    signinFrame.setVisible(true);    }//GEN-LAST:event_btnbackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnManageCourses;
     private javax.swing.JButton btnManageLessons;
+    private javax.swing.JButton btnback;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }

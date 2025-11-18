@@ -3,11 +3,14 @@
         "role": "student",
         "enrolledCourses": [
             {
-                "completedLessons": [5],
+                "completedLessons": [
+                    11,
+                    5
+                ],
                 "courseId": 1
             },
             {
-                "completedLessons": [22],
+                "completedLessons": [],
                 "courseId": 5
             }
         ],
@@ -29,10 +32,7 @@
     },
     {
         "role": "instructor",
-        "createdCourses": [
-            1,
-            5
-        ],
+        "createdCourses": [1],
         "userId": 3,
         "email": "obra@gmail.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
@@ -45,5 +45,13 @@
         "email": "youssef@gmail.com",
         "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
         "username": "youssef"
+    },
+    {
+        "role": "student",
+        "enrolledCourses": [],
+        "userId": 111,
+        "email": "w@gmail.com",
+        "passwordHash": "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4",
+        "username": "ds"
     }
 ]

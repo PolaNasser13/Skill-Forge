@@ -26,8 +26,9 @@ public class SignIn extends javax.swing.JPanel {
     public SignIn(String role) {
         this.role = role;
         initComponents();
-        this.setSize(800, 800);       
-this.setPreferredSize(new java.awt.Dimension(600, 500));
+        this.setSize(600, 500);       
+this.setPreferredSize(new java.awt.Dimension(600, 300));
+
     }
 
     /**
@@ -72,104 +73,98 @@ this.setPreferredSize(new java.awt.Dimension(600, 500));
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 425, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(SignIn, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(143, 143, 143))
+                .addGap(132, 132, 132))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(88, 88, 88)
+                .addGap(13, 13, 13)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(Email, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(54, 54, 54)
+                .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 59, Short.MAX_VALUE)
+                    .addComponent(Password, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addGap(18, 18, 18)
                 .addComponent(SignIn, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(16, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void SignInActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SignInActionPerformed
-try {
-    String email = Email.getText() != null ? Email.getText().trim() : "";
-    String password = Password.getText() != null ? Password.getText() : "";
+    try {
+        String email = Email.getText() != null ? Email.getText().trim() : "";
+        String password = Password.getText() != null ? Password.getText() : "";
 
-  
-    if (email.isEmpty()) throw new Exception("Email cannot be empty");
-    int atPos = email.indexOf("@");
-    int dotPos = email.lastIndexOf(".");
-    if (atPos <= 0 || dotPos <= atPos + 1 || dotPos == email.length() - 1) {
-        throw new Exception("Invalid email format");
-    }
+        if (email.isEmpty()) throw new Exception("Email cannot be empty");
+        int atPos = email.indexOf("@");
+        int dotPos = email.lastIndexOf(".");
+        if (atPos <= 0 || dotPos <= atPos + 1 || dotPos == email.length() - 1) {
+            throw new Exception("Invalid email format");
+        }
 
-    if (password.length() < 4) throw new Exception("Password too short (min 4 characters)");
+        if (password.length() < 4) throw new Exception("Password too short (min 4 characters)");
 
+        if (role == null || role.isEmpty()) throw new Exception("Role not selected");
 
-    if (role == null || role.isEmpty()) throw new Exception("Role not selected");
+        AuthService auth = new AuthService();
 
-    AuthService auth = new AuthService();
+        if (role.equalsIgnoreCase("Instructor")) {
+            Instructor instructor = auth.loginInstructor(email, password);
+            if (instructor == null) {
+                JOptionPane.showMessageDialog(this, "Invalid email or password!");
+                return;
+            }
 
+            JOptionPane.showMessageDialog(this, "Instructor logged in successfully!");
+            Email.setText("");
+            Password.setText("");
 
-    if (role.equalsIgnoreCase("Instructor")) {
-        Instructor instructor = auth.loginInstructor(email, password);
-        if (instructor == null) {
-            JOptionPane.showMessageDialog(this, "Invalid email or password!");
+            JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+            currentFrame.dispose();
+
+            JFrame dash = new JFrame("Instructor Dashboard");
+            dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            dash.getContentPane().add(new InstructorDashboard(instructor));
+            dash.pack();
+            dash.setLocationRelativeTo(null);
+            dash.setVisible(true);
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Instructor logged in successfully!");
-        Email.setText("");
-        Password.setText("");
+        if (role.equalsIgnoreCase("Student")) {
+            Student student = auth.loginStudent(email, password);
+            if (student == null) {
+                JOptionPane.showMessageDialog(this, "Invalid email or password!");
+                return;
+            }
 
+            JOptionPane.showMessageDialog(this, "Student logged in successfully!");
+            Email.setText("");
+            Password.setText("");
 
-        JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-        if (parentFrame != null) parentFrame.dispose();
-        JFrame dash = new JFrame("Instructor Dashboard");
-        dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dash.getContentPane().add(new InstructorDashboard(instructor));
-        dash.pack();
-        dash.setLocationRelativeTo(null);
-        dash.setVisible(true);
-        return;
-    }
+            JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+            currentFrame.dispose();
 
-    
-    if (role.equalsIgnoreCase("Student")) {
-        Student student = auth.loginStudent(email, password);
-        if (student == null) {
-            JOptionPane.showMessageDialog(this, "Invalid email or password!");
+            JFrame dash = new JFrame("Student Dashboard");
+            dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+            dash.getContentPane().add(new StudentDashboard(student));
+            dash.pack();
+            dash.setLocationRelativeTo(null);
+            dash.setVisible(true);
             return;
         }
 
-        JOptionPane.showMessageDialog(this, "Student logged in successfully!");
-        Email.setText("");
-        Password.setText("");
+        JOptionPane.showMessageDialog(this, "Invalid role selected!");
 
-        JFrame parentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-        if (parentFrame != null) parentFrame.dispose();
-
-   
-        JFrame dash = new JFrame("Student Dashboard");
-        dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        dash.getContentPane().add(new StudentDashboard(student));
-        dash.pack();
-        dash.setLocationRelativeTo(null);
-        dash.setVisible(true);
-        return;
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
     }
-
-    JOptionPane.showMessageDialog(this, "Invalid role selected!");
-
-} catch (Exception e) {
-    JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
-    e.printStackTrace();
-}
 
 
 
