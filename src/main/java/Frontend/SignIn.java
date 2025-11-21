@@ -175,7 +175,7 @@ public class SignIn extends javax.swing.JPanel {
         }
 
         if (role.equalsIgnoreCase("Admin")) {
-            User admin = auth.login(email, password, role);
+            Backend.Models.Admin admin = (Backend.Models.Admin) auth.login(email, password, role);
             if (admin == null) {
                 JOptionPane.showMessageDialog(this, "Invalid email or password!");
                 return;
@@ -190,13 +190,13 @@ public class SignIn extends javax.swing.JPanel {
 
             JFrame dash = new JFrame("Admin Dashboard");
             dash.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-            dash.getContentPane().add(new AdminDashboard());
+            dash.getContentPane().add(new AdminDashboard(admin.getUserId()));
             dash.pack();
             dash.setLocationRelativeTo(null);
             dash.setVisible(true);
             return;
         }
-
+        
         JOptionPane.showMessageDialog(this, "Invalid role selected!");
 
     } catch (Exception e) {

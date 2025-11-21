@@ -4,17 +4,21 @@
  */
 package Frontend;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author pola-nasser13
  */
 public class AdminDashboard extends javax.swing.JPanel {
-
+    private int adminId;
     /**
      * Creates new form AdminDashboard
      */
-    public AdminDashboard() {
+    public AdminDashboard(int adminId) {
+        this.adminId = adminId;
         initComponents();
+        loadPendingCourses();
     }
 
     /**
@@ -85,6 +89,8 @@ public class AdminDashboard extends javax.swing.JPanel {
         btnBack.setText("Back");
         btnBack.addActionListener(this::btnBackActionPerformed);
 
+        auditField.addActionListener(this::auditFieldActionPerformed);
+
         jLabel3.setText("If you are going to decline the course, please write the reason:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -109,21 +115,20 @@ public class AdminDashboard extends javax.swing.JPanel {
                                 .addGap(0, 10, Short.MAX_VALUE)))))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(154, 154, 154)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel3)))
+                .addContainerGap()
+                .addComponent(jLabel3)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(184, 184, 184))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(10, 10, 10)
+                .addGap(16, 16, 16)
                 .addComponent(jLabel2)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -137,18 +142,84 @@ public class AdminDashboard extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
+private void loadPendingCourses() {
+    javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) availableCourseTable.getModel();
+    model.setRowCount(0);
+    
+    Backend.Services.AdminService adminService = new Backend.Services.AdminService();
+    java.util.ArrayList<Backend.Models.Course> pendingCourses = adminService.getPendingCourses();
+    
+    for (int i = 0; i < pendingCourses.size(); i++) {
+        Backend.Models.Course course = pendingCourses.get(i);
+        Backend.Services.CourseService courseService = new Backend.Services.CourseService(course);
+        model.addRow(new Object[]{
+            course.getCourseId(),
+            course.getTitle(),
+            courseService.getInstructorName(),
+            course.getLessons().size()
+        });
+    }
+}
     private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnApproveActionPerformed
+        int selectedRow = availableCourseTable.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a course first.");
+            return;
+        }
+
+        int courseId = (Integer) availableCourseTable.getValueAt(selectedRow, 0);
+
+        Backend.Services.AdminService adminService = new Backend.Services.AdminService();
+        boolean success = adminService.approveCourse(courseId, adminId);
+
+        if (success) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Course approved successfully!");
+            loadPendingCourses();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Failed to approve course.");
+        }    }//GEN-LAST:event_btnApproveActionPerformed
 
     private void btnDeclineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeclineActionPerformed
-        // TODO add your handling code here:
+        int selectedRow = availableCourseTable.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a course first.");
+            return;
+        }
+
+        String reason = auditField.getText().trim();
+        if (reason.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please enter a reason for declining.");
+            return;
+        }
+
+        int courseId = (Integer) availableCourseTable.getValueAt(selectedRow, 0);
+
+        Backend.Services.AdminService adminService = new Backend.Services.AdminService();
+        boolean success = adminService.rejectCourse(courseId, adminId, reason);
+
+        if (success) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Course declined successfully!");
+            loadPendingCourses();
+            auditField.setText("");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Failed to decline course.");
+        }
     }//GEN-LAST:event_btnDeclineActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+    JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+    currentFrame.dispose();
+    
+    JFrame homeFrame = new JFrame("Skill-Forge");
+    homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    homeFrame.getContentPane().add(new Home());
+    homeFrame.pack();
+    homeFrame.setLocationRelativeTo(null);
+    homeFrame.setVisible(true);    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void auditFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_auditFieldActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBackActionPerformed
+    }//GEN-LAST:event_auditFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -133,13 +133,12 @@ public class InstructorDashboard extends javax.swing.JPanel {
     JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
     currentFrame.dispose();
     
-    JFrame signinFrame = new JFrame("Sign In");
-    SignIn signinPanel = new SignIn("Instructor");
-    signinFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    signinFrame.getContentPane().add(signinPanel);
-    signinFrame.pack();
-    signinFrame.setLocationRelativeTo(null);
-    signinFrame.setVisible(true);    }//GEN-LAST:event_btnbackActionPerformed
+    JFrame homeFrame = new JFrame("Skill-Forge");
+    homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    homeFrame.getContentPane().add(new Home());
+    homeFrame.pack();
+    homeFrame.setLocationRelativeTo(null);
+    homeFrame.setVisible(true);    }//GEN-LAST:event_btnbackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
