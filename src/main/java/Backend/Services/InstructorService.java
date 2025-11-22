@@ -5,6 +5,7 @@ import Backend.Database.UserDatabase;
 import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Lesson;
+import Backend.Models.Quiz;
 import java.util.ArrayList;
 
 public class InstructorService {
@@ -68,8 +69,8 @@ public class InstructorService {
         return instructor.getCreatedCourseIds();
     }
 
-    public boolean addLesson(Course c, int lessonId, String title, String content, ArrayList<String> optionalResources) {
-        Lesson newLesson = new Lesson(lessonId, title, content, optionalResources);
+    public boolean addLesson(Course c, int lessonId, String title, String content, ArrayList<String> optionalResources, Quiz quiz) {
+        Lesson newLesson = new Lesson(lessonId, title, content, optionalResources, quiz);
         return courses.addLesson(c.getCourseId(), newLesson);
     }
 
