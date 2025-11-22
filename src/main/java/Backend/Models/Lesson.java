@@ -1,6 +1,7 @@
 package Backend.Models;
 
 import Backend.Database.Info;
+import Backend.Models.Quiz;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.util.ArrayList;
@@ -11,21 +12,26 @@ public class Lesson implements Info {
     private int lessonId;
     private String title;
     private String content;
-    private List<String> resources; 
+    private ArrayList<String> resources; 
+    private Quiz quiz;
 
-    public Lesson(int lessonId, String title, String content, List<String> resources) {
-        setLessonId(lessonId);
-        setTitle(title);
-        setContent(content);
-        this.resources = resources != null ? new ArrayList<>(resources) : new ArrayList<>();
+    public Lesson(int lessonId, String title, String content, ArrayList<String> resources,Quiz quiz) {
+     setLessonId(lessonId);
+     setTitle(title);
+     setContent(content);
+    setResources(resources);
+    setQuiz(quiz);
+    
+       
     }
 
-    public Lesson(JSONObject obj) {
-        this.lessonId = obj.getInt("lessonId");
-        this.title = obj.getString("title");
-        this.content = obj.getString("content");
+    public Lesson(JSONObject json) {
+        this.lessonId = json.getInt("lessonId");
+        this.title = json.getString("title");
+        this.content = json.getString("content");
+        this.quiz= new Quiz(json.getJSONObject("quiz"));
         this.resources = new ArrayList<>();
-        JSONArray arr = obj.optJSONArray("resources");
+        JSONArray arr = json.optJSONArray("resources");
         if (arr != null) {
             for (int i = 0; i < arr.length(); i++) {
                 resources.add(arr.getString(i));
@@ -42,14 +48,17 @@ public class Lesson implements Info {
     public boolean removeResource(String resource) {
         return resources.remove(resource);
     }
-
-    @Override
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
         obj.put("lessonId", lessonId);
         obj.put("title", title);
         obj.put("content", content);
-        obj.put("resources", new JSONArray(resources));
+        obj.put("quiz", quiz.toJSON());
+        JSONArray resourcesArr=new JSONArray();
+        for(int i=0;i<resources.size();i++){
+        resourcesArr.put(resources.get(i));
+        }
+        obj.put("resources", resourcesArr);
         return obj;
     }
 
@@ -65,7 +74,7 @@ public class Lesson implements Info {
         return content;
     }
 
-    public List<String> getResources() {
+    public ArrayList<String> getResources() {
         return resources;
     }
 
@@ -75,30 +84,32 @@ public class Lesson implements Info {
     }
 
     public void setTitle(String title) {
-        this.title = title != null ? title : "";
+        this.title = title;
     }
 
     public void setContent(String content) {
-        this.content = content != null ? content : "";
+        this.content = content;
     }
     
-    public void setResources(List<String> newResources) {
-    if (newResources != null) {
-        this.resources = new ArrayList<>(newResources);
+    public void setResources(ArrayList<String> resources) {
+    if (resources != null) {
+        this.resources = new ArrayList<>(resources);
     } else {
         this.resources = new ArrayList<>();
     }
 }
-
-    @Override
+    public void setQuiz(Quiz quiz){
+        if(quiz==null){
+            throw new IllegalArgumentException("A lesson must have a quiz");
+        }
+        this.quiz=quiz;
+    }
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (!(obj instanceof Lesson)) return false;
         Lesson other = (Lesson) obj;
         return this.lessonId == other.lessonId;
     }
-
-    @Override
     public int hashCode() {
         return Integer.hashCode(lessonId);
     }
