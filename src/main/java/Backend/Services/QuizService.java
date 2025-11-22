@@ -5,10 +5,12 @@
 package Backend.Services;
 
 import Backend.Database.CourseDatabase;
+import Backend.Database.UserDatabase;
 import Backend.Models.Course;
 import Backend.Models.Lesson;
 import Backend.Models.Quiz;
 import Backend.Models.Student;
+import java.util.ArrayList;
 
 /**
  *
@@ -23,6 +25,7 @@ public class QuizService {
     private Course c;
     private Lesson l;
     private CourseDatabase courses;
+    private UserDatabase users;
     
     public QuizService(Quiz quiz, Student student, int courseId, int lessonId){
         this.quiz = quiz;
@@ -33,6 +36,7 @@ public class QuizService {
         courseService = new CourseService(c);
         l = courseService.getLessonById(lessonId);
          this.courses = new CourseDatabase("courses.json");
+         this.users = new UserDatabase("users.json");
     }
     
 
@@ -49,7 +53,7 @@ public class QuizService {
         }
     }
     
-    public int getQuizScore(String answers){
+    public double getQuizScore(String answers){
         String[] answersArray = answers.split(",");
         int correctAnswersCount = 0;
         for(int i=0; i < answersArray.length; i++){
@@ -65,12 +69,25 @@ public class QuizService {
                 correctAnswersCount++;
             }
         }
-        int score = (correctAnswersCount / answersArray.length) * 100;
+        double score = (correctAnswersCount / answersArray.length) * 100;
         student.setQuizScore(courseId, lessonId, score);
+        users.updateUser(student);
         return score;
     }
     
-    public boolean isQuizPassed(int score){
+    public boolean isQuizPassed(double score){
         return quiz.isPassed(score);
+    }
+    
+    
+    public ArrayList<Integer> getCorrectAnswers(double score){
+        ArrayList<Integer> correctAnswers = new ArrayList<Integer>();
+        if(isQuizPassed(score)){
+            for(int i = 0; i < quiz.getQuestions().size(); i++){
+                correctAnswers.add(quiz.getQuestions().get(i).getCorrectChoice());
+            }
+            return correctAnswers;
+        }
+        return null;
     }
 }
