@@ -10,6 +10,7 @@ import Backend.Models.Certificate;
 import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Student;
+import Backend.Services.CertificateService;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -28,17 +29,19 @@ public class CertificateView extends javax.swing.JPanel {
     /**
      * Creates new form CertificateView
      */
+    CertificateService certificateService;
     public CertificateView(Certificate cert) {
         initComponents();
         
         this.setBackground(Color.YELLOW);
 
         this.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-
-        studentNameLabel.setText(Student.getUsername());
-        courseNameLabel.setText(Course.getTitle());
+        certificateService = new CertificateService(cert);
+        
+        studentNameLabel.setText(certificateService.getStudentName());
+        courseNameLabel.setText(certificateService.getCourseTitle());
         dateLabel.setText(cert.getIssueDate());
-        instructorName.setText(Instructor.getUsername());
+        instructorName.setText(certificateService.getInstructorName());
     }
 
     /**
@@ -158,9 +161,9 @@ public class CertificateView extends javax.swing.JPanel {
                         .addGap(18, 18, 18)
                         .addComponent(courseNameLabel)
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(dateLabel))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel6))
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel8)
