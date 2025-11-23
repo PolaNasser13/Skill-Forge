@@ -66,12 +66,7 @@ public class StudentService {
     }
     
     public ArrayList<Certificate> getCertificates(){
-        ArrayList<Integer> certificatesIds = student.getCertificates();
-        ArrayList<Certificate> certificates = new ArrayList<Certificate>();
-        for(int i = 0; i < certificatesIds.size(); i++){
-            certificates.add(i, users.getCertificateById(certificatesIds.get(i)));
-        }
-        return certificates;
+        return student.getCertificates();
     }
     
     public boolean checkCourseCompletion(Course course){
@@ -81,6 +76,29 @@ public class StudentService {
             return true;
         }
         return false;
+    }
+    
+    public boolean addCertificateToStudent(Certificate certificate) {
+        student.addCertificate(certificate);
+        return users.updateUser(student);
+    }
+
+    
+    public boolean generateCertificate(Course course){
+        String name = student.getUsername();
+        String courseTitle = course.getTitle();
+        CourseService courseService = new CourseService(course);
+        String instructorName = courseService.getInstructorName();
+         String certId = "CERT_" + course.getCourseId() + "" + student.getUserId() + "" + System.currentTimeMillis();
+          Certificate certificate = new Certificate(certId, student.getUserId(), course.getCourseId(), 
+                                                    name, courseTitle, instructorName);
+            
+            return addCertificateToStudent(certificate);
+    }
+    
+    public boolean canAccessLesson(Course c,int lessonId){
+        ArrayList<Lesson> lessons = c.getLessons();
+        
     }
     
 }
