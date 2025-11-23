@@ -4,16 +4,10 @@
  */
 package Backend.Services;
 
-import Backend.Database.CourseDatabase;
-import Backend.Database.UserDatabase;
-import Backend.Models.Course;
-import Backend.Models.Lesson;
 import Backend.Models.Question;
 import Backend.Models.Quiz;
 import Backend.Models.Student;
 import java.util.ArrayList;
-import java.util.HashMap;
-
 /**
  *
  * @author HP_Laptop
@@ -33,14 +27,14 @@ public class QuizService {
         this.studentService = new StudentService(student);
     }
 
-    public double calculateScore(ArrayList<Integer> userAnswers) {
-        if (userAnswers.size() != quiz.getQuestions().size()) {
+    public double calculateScore(ArrayList<Integer> answers) {
+        if (answers.size() != quiz.getQuestions().size()) {
             throw new IllegalArgumentException("Number of answers must match number of questions");
         }
 
         int correctCount = 0;
-        for (int i = 0; i < userAnswers.size(); i++) {
-            if (userAnswers.get(i) == quiz.getQuestions().get(i).getCorrectChoice()) {
+        for (int i = 0; i < answers.size(); i++) {
+            if (answers.get(i) == quiz.getQuestions().get(i).getCorrectChoice()) {
                 correctCount++;
             }
         }
