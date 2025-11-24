@@ -109,6 +109,8 @@ public class CreateQuiz extends javax.swing.JPanel {
         jLabel4.setText("Add Choices:");
         jLabel4.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        tfChoiceB.addActionListener(this::tfChoiceBActionPerformed);
+
         jLabel8.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
         jLabel8.setText("B)");
         jLabel8.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -165,6 +167,8 @@ public class CreateQuiz extends javax.swing.JPanel {
         jLabel5.setText("Add Question:");
         jLabel5.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
+        tfChoiceA.addActionListener(this::tfChoiceAActionPerformed);
+
         jLabel7.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
         jLabel7.setText("A)");
         jLabel7.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -199,9 +203,15 @@ public class CreateQuiz extends javax.swing.JPanel {
 
         tfQuestion.addActionListener(this::tfQuestionActionPerformed);
 
+        tfChoiceC.addActionListener(this::tfChoiceCActionPerformed);
+
+        tfChoiceD.addActionListener(this::tfChoiceDActionPerformed);
+
         jLabel12.setFont(new java.awt.Font("Liberation Sans", 0, 36)); // NOI18N
         jLabel12.setText("QuestionId:");
         jLabel12.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        tfQuestionId.addActionListener(this::tfQuestionIdActionPerformed);
 
         jDesktopPane1.setLayer(jLabel9, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel4, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -327,6 +337,7 @@ public class CreateQuiz extends javax.swing.JPanel {
         label1.setText("To remove Question, Select Question and press remove question button:");
 
         btnRemoveQuestion.setText("remove question");
+        btnRemoveQuestion.addActionListener(this::btnRemoveQuestionActionPerformed);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -441,6 +452,30 @@ public class CreateQuiz extends javax.swing.JPanel {
     private void btnAddQuestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddQuestionActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAddQuestionActionPerformed
+
+    private void tfQuestionIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfQuestionIdActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfQuestionIdActionPerformed
+
+    private void tfChoiceAActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfChoiceAActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfChoiceAActionPerformed
+
+    private void tfChoiceBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfChoiceBActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfChoiceBActionPerformed
+
+    private void tfChoiceCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfChoiceCActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfChoiceCActionPerformed
+
+    private void tfChoiceDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tfChoiceDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfChoiceDActionPerformed
+
+    private void btnRemoveQuestionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveQuestionActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRemoveQuestionActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

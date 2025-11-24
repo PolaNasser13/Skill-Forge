@@ -366,6 +366,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tfChoiceB">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfChoiceBActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel8">
                   <Properties>
@@ -497,6 +500,9 @@
                   </Layout>
                   <SubComponents>
                     <Component class="javax.swing.JTextField" name="tfChoiceA">
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfChoiceAActionPerformed"/>
+                      </Events>
                     </Component>
                     <Component class="javax.swing.JLabel" name="jLabel7">
                       <Properties>
@@ -528,8 +534,14 @@
                   </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tfChoiceC">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfChoiceCActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tfChoiceD">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfChoiceDActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JLabel" name="jLabel12">
                   <Properties>
@@ -543,6 +555,9 @@
                   </Properties>
                 </Component>
                 <Component class="javax.swing.JTextField" name="tfQuestionId">
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tfQuestionIdActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -595,6 +610,9 @@
               <Properties>
                 <Property name="text" type="java.lang.String" value="remove question"/>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnRemoveQuestionActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
