@@ -611,7 +611,6 @@ public class ManageCourse extends javax.swing.JPanel {
         AnalyticsService analyticsService=new AnalyticsService(selectedCourse);
          if (lessons != null) {
         for (int i = 0; i < lessons.size(); i++) {
-            // Calculate average for this specific lesson using the service
             double avg = analyticsService.getLessonAverage(lessons.get(i).getLessonId());
             lessonDataset.addValue(avg, "Class Average", lessons.get(i).getTitle());
         }

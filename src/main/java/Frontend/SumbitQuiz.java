@@ -35,17 +35,17 @@ public class SumbitQuiz extends javax.swing.JPanel {
     }
 
     private void displayResults() {
-        // Set basic results
+        
         tfScore.setText(String.format("%.2f%%", score));
         tfNumOfAttempts.setText(String.valueOf(attempts));
         
         if (passed) {
             tfPassOrFail.setText("PASSED");
-            tfPassOrFail.setForeground(new java.awt.Color(0, 128, 0)); // Green
+            tfPassOrFail.setForeground(new java.awt.Color(0, 128, 0)); 
             displayQuestionsAndAnswers();
         } else {
             tfPassOrFail.setText("FAILED");
-            tfPassOrFail.setForeground(new java.awt.Color(255, 0, 0)); // Red
+            tfPassOrFail.setForeground(new java.awt.Color(255, 0, 0)); 
             QuestionsAndAnswers.setText("You must pass the quiz to see the correct answers and access the next lesson.\n\nYou can retake the quiz to improve your score.");
         }
     }
@@ -62,7 +62,6 @@ public class SumbitQuiz extends javax.swing.JPanel {
             int correctChoice = question.getCorrectChoice();
             int userAnswer = userAnswers.get(i);
             
-            // Display all choices
             for (int j = 0; j < choices.size(); j++) {
                 String choiceLabel = String.valueOf((char)('A' + j));
                 String choiceText = choices.get(j);
@@ -76,7 +75,6 @@ public class SumbitQuiz extends javax.swing.JPanel {
                 }
             }
             
-            // Add spacing between questions
             sb.append("\n");
         }
         

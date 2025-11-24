@@ -5,7 +5,6 @@
 package Frontend;
 
 import Backend.Models.Instructor;
-import Backend.Models.User;
 import javax.swing.JFrame;
 
 /**
@@ -15,10 +14,10 @@ import javax.swing.JFrame;
 public class InstructorDashboard extends javax.swing.JPanel {
 
 
-    private Instructor instructor; // store the logged-in instructor
+    private Instructor instructor; 
 
     public InstructorDashboard(Instructor instructor) {
-        this.instructor = instructor; // store user info
+        this.instructor = instructor; 
         initComponents();
 
         jLabel1.setText("Instructor Dashboard");
