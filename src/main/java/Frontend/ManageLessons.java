@@ -3,16 +3,22 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package Frontend;
-
+import Backend.Services.AnalyticsService;
 import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Lesson;
 import Backend.Services.InstructorService;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 /**
  *
@@ -72,6 +78,7 @@ public ManageLessons(Instructor instructor) {
         tfuResources = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         btnback = new javax.swing.JButton();
+        btnStudentAverageQuizPerformance = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -223,6 +230,14 @@ public ManageLessons(Instructor instructor) {
             }
         });
 
+        btnStudentAverageQuizPerformance.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnStudentAverageQuizPerformance.setText("Student Average Quiz Performance");
+        btnStudentAverageQuizPerformance.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStudentAverageQuizPerformanceActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -279,11 +294,15 @@ public ManageLessons(Instructor instructor) {
                                         .addGap(82, 82, 82)
                                         .addComponent(btnAdd)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(147, 147, 147)
+                                .addComponent(btnStudentAverageQuizPerformance, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE))
+                                .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(107, 107, 107)
                                 .addComponent(btnUpdate)
@@ -334,7 +353,7 @@ public ManageLessons(Instructor instructor) {
                         .addComponent(jLabel12)
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addContainerGap(97, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addGap(90, 90, 90)
                 .addComponent(jLabel6)
@@ -359,11 +378,13 @@ public ManageLessons(Instructor instructor) {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnDelete)
-                        .addGap(8, 8, 8))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31))))
+                        .addGap(31, 31, 31))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnDelete)
+                            .addComponent(btnStudentAverageQuizPerformance, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(14, 14, 14))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -454,8 +475,9 @@ public ManageLessons(Instructor instructor) {
             }
         }
 
-        boolean added = instructorService.addLesson(selectedCourse, id, title, content, resources, quiz);
-        if (added) {
+       // boolean added = instructorService.addLesson(selectedCourse, id, title, content, resources, quiz);
+       boolean added = instructorService.addLesson(selectedCourse, id, title, content, resources, null);
+       if (added) {
             JOptionPane.showMessageDialog(this, "Lesson added successfully!");
             loadLessons(selectedCourse);
             clearAddForm();
@@ -508,8 +530,42 @@ public ManageLessons(Instructor instructor) {
     dash.setVisible(true);
     }//GEN-LAST:event_btnbackActionPerformed
 
+    private void btnStudentAverageQuizPerformanceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStudentAverageQuizPerformanceActionPerformed
+        if(selectedCourse == null){
+    JOptionPane.showMessageDialog(this,"Please select a course first");
+    return;
+    }
+    AnalyticsService analytics= new  AnalyticsService(selectedCourse);
+    ArrayList<HashMap<String,Double>> studentAverages= analytics.getStudentQuizzesAverage();
+    if(studentAverages==null||studentAverages.isEmpty()){
+        JOptionPane.showMessageDialog(this,"No student performance data available for this course");
+        return;
+    }
+    DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+    for(int i=0;i<studentAverages.size();i++){
+        HashMap<String,Double> entry = studentAverages.get(i);
+        ArrayList<String> keys= new ArrayList<>(entry.keySet());
+        for(int j=0;j<keys.size();j++){
+            String studentName = keys.get(j);
+            double averageScore= entry.get(studentName);
+            dataset.addValue(averageScore,"Average Score",studentName);
+        }
+    }
+    
+    
+   JFreeChart chart = ChartFactory.createBarChart("Student Average Quiz Performance", "Student", "Average Score", dataset,PlotOrientation.VERTICAL,true,true,false);
+   ChartPanel panel = new ChartPanel(chart);
+   JFrame chartFrame = new JFrame("Student Quiz Performance");
+   chartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+   chartFrame.getContentPane().add(panel);
+   chartFrame.setSize(900,600);
+   chartFrame.setLocationRelativeTo(null);
+   chartFrame.setVisible(true);
+    }//GEN-LAST:event_btnStudentAverageQuizPerformanceActionPerformed
+
 private void addListeners() {
     coursesListener = new javax.swing.event.ListSelectionListener() {
+        @Override
         public void valueChanged(javax.swing.event.ListSelectionEvent e) {
             if (!e.getValueIsAdjusting()) {
                 int row = coursesTable.getSelectedRow();
@@ -524,6 +580,8 @@ private void addListeners() {
     coursesTable.getSelectionModel().addListSelectionListener(coursesListener);
 
     lessonsListener = new javax.swing.event.ListSelectionListener() {
+       
+        @Override
         public void valueChanged(javax.swing.event.ListSelectionEvent e) {
             if (!e.getValueIsAdjusting()) {
                 int row = lessonsTable.getSelectedRow();
@@ -587,6 +645,7 @@ private void clearUpdateForm() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnStudentAverageQuizPerformance;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnback;
     private javax.swing.JTable coursesTable;

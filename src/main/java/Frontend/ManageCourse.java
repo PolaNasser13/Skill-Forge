@@ -8,13 +8,20 @@ import Backend.Models.Instructor;
 
 import Backend.Models.Course;
 import Backend.Models.Student;
+import Backend.Services.AnalyticsService;
 import Backend.Services.InstructorService;
 import Backend.Services.CourseService;
 import Backend.Services.StudentService;
 import java.util.ArrayList;
+import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.category.DefaultCategoryDataset;
 /**
  *
  * @author Pc
@@ -24,6 +31,7 @@ public class ManageCourse extends javax.swing.JPanel {
      private DefaultTableModel coursesModel;
      private DefaultTableModel studentsModel;
      private InstructorService instructorService;
+     private Course selectedCourse;
      private javax.swing.event.ListSelectionListener coursesListener;
     /**
      * Creates new form ManageCourse
@@ -72,6 +80,7 @@ public class ManageCourse extends javax.swing.JPanel {
         studentsTable = new javax.swing.JTable();
         jLabel11 = new javax.swing.JLabel();
         btnback = new javax.swing.JButton();
+        btnShowStudentProgress = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -219,10 +228,22 @@ public class ManageCourse extends javax.swing.JPanel {
             }
         });
 
+        btnShowStudentProgress.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnShowStudentProgress.setText("Show Student Progress ");
+        btnShowStudentProgress.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnShowStudentProgressActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(41, 41, 41))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -285,12 +306,11 @@ public class ManageCourse extends javax.swing.JPanel {
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 348, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(444, 444, 444)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(360, 360, 360)
+                        .addComponent(btnShowStudentProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 223, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(22, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 308, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -343,7 +363,9 @@ public class ManageCourse extends javax.swing.JPanel {
                                     .addGap(170, 170, 170)
                                     .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnShowStudentProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(26, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -532,6 +554,37 @@ public class ManageCourse extends javax.swing.JPanel {
     dash.setLocationRelativeTo(null);
     dash.setVisible(true);    }//GEN-LAST:event_btnbackActionPerformed
 
+    private void btnShowStudentProgressActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowStudentProgressActionPerformed
+       if(selectedCourse==null){
+           JOptionPane.showMessageDialog(this,"Please select a course first");
+    return;
+       }
+       AnalyticsService analytics=new AnalyticsService(selectedCourse);
+       ArrayList<HashMap<String,Double>> progressList=analytics.getStudentsProgress();
+       if(progressList==null||progressList.isEmpty()){
+       JOptionPane.showMessageDialog(this,"No student performance data available for this course");
+        return;    
+       }
+       DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+       for(int i=0;i<progressList.size();i++){
+       HashMap<String,Double> entry=progressList.get(i);
+       ArrayList<String>keys = new ArrayList<>(entry.keySet());
+       for(int j=0;j<keys.size();j++){
+           String studentName=keys.get(j);
+           double completionRate=entry.get(studentName);
+           dataset.addValue(completionRate,"completion %",studentName);
+       }
+       }
+   JFreeChart chart = ChartFactory.createBarChart("Student Course Progress Completion", "Student", "Completion Percentage", dataset,PlotOrientation.VERTICAL,true,true,false);
+   ChartPanel panel = new ChartPanel(chart);
+   JFrame chartFrame = new JFrame("Student Course Progress");
+   chartFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+   chartFrame.getContentPane().add(panel);
+   chartFrame.setSize(900,600);
+   chartFrame.setLocationRelativeTo(null);
+   chartFrame.setVisible(true);
+    }//GEN-LAST:event_btnShowStudentProgressActionPerformed
+
     private void loadStudentsToTable(Course c) {
         studentsModel.setRowCount(0);
         ArrayList<Integer> studentsIds = instructorService.getEnrolledStudentsIds(c);
@@ -589,6 +642,7 @@ public class ManageCourse extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnShowStudentProgress;
     private javax.swing.JButton btnUpdate;
     private javax.swing.JButton btnback;
     private javax.swing.JTable courseTable;
