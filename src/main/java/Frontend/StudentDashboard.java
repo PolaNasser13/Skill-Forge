@@ -360,14 +360,21 @@ public class StudentDashboard extends javax.swing.JPanel {
         }
     }
 
-    private void loadLessonsForCourse(int courseId) {
-        lessonsModel.setRowCount(0);
-        Course course = studentService.getCourse(courseId);
-        if (course != null) {
-            ArrayList<Lesson> lessons = course.getLessons();
-            for (int i = 0; i < lessons.size(); i++) {
-                Lesson lesson = lessons.get(i);
-                boolean completed = studentService.isLessonCompleted(courseId, lesson.getLessonId());
+private void loadLessonsForCourse(int courseId) {
+    lessonsModel.setRowCount(0);
+    Course course = studentService.getCourse(courseId);
+    if (course != null) {
+        ArrayList<Lesson> lessons = course.getLessons();
+        
+        for (int i = 0; i < lessons.size(); i++) {
+            Lesson lesson = lessons.get(i);
+            
+            if (!lesson.hasQuiz()) {
+                studentService.getStudent().markLessonCompletedById(courseId, lesson.getLessonId());
+            }
+            
+            if (lesson.hasQuiz()) {
+                boolean completed = studentService.getStudent().isLessonCompleted(courseId, lesson.getLessonId());
                 lessonsModel.addRow(new Object[]{
                     lesson.getLessonId(),
                     lesson.getTitle(),
@@ -376,36 +383,54 @@ public class StudentDashboard extends javax.swing.JPanel {
                 });
             }
         }
-    }
-
-    private void loadCertificates() {
-        certificatesModel.setRowCount(0);
-        ArrayList<Certificate> certificates = studentService.getCertificates();
-        if (certificates != null) {
-            for (int i = 0; i < certificates.size(); i++) {
-                Certificate cert = certificates.get(i);
-                Course course = studentService.getCourse(cert.getCourseId());
-                String courseName = (course != null) ? course.getTitle() : "Unknown Course";
-                certificatesModel.addRow(new Object[]{
-                    cert.getCertificateId(),
-                    courseName,
-                    cert.getIssueDate()
-                });
-            }
-        }
-    }
-
-    private void checkAndGenerateCertificate(Course course) {
-        ArrayList<Certificate> certificates = studentService.getCertificates();
-        boolean hasCertificate = false;
         
+        studentService.saveStudentProgress();
+        
+        loadEnrolledCourses();
+    }
+}
+
+private void loadCertificates() {
+    certificatesModel.setRowCount(0);
+    ArrayList<Certificate> certificates = studentService.getCertificates();
+    if (certificates != null) {
         for (int i = 0; i < certificates.size(); i++) {
             Certificate cert = certificates.get(i);
-            if (cert.getCourseId() == course.getCourseId()) {
-                hasCertificate = true;
-                break;
-            }
+            Course course = studentService.getCourse(cert.getCourseId());
+            String courseName = (course != null) ? course.getTitle() : "Unknown Course";
+            certificatesModel.addRow(new Object[]{
+                cert.getCertificateId(),
+                courseName,  // Show course name instead of course ID
+                cert.getIssueDate()
+            });
         }
+    }
+}
+
+private void checkAndGenerateCertificate(Course course) {
+    ArrayList<Certificate> certificates = studentService.getCertificates();
+    boolean hasCertificate = false;
+    
+    for (int i = 0; i < certificates.size(); i++) {
+        Certificate cert = certificates.get(i);
+        if (cert.getCourseId() == course.getCourseId() && 
+            cert.getStudentId() == studentService.getStudent().getUserId()) {
+            hasCertificate = true;
+            break;
+        }
+    }
+    
+    if (!hasCertificate) {
+        boolean generated = studentService.generateCertificate(course);
+        if (generated) {
+            JOptionPane.showMessageDialog(this, 
+                "Congratulations! You've completed the course: " + course.getTitle() + 
+                "\nA certificate has been generated.", 
+                "Course Completed", 
+                JOptionPane.INFORMATION_MESSAGE);
+            loadCertificates(); // Refresh certificates table
+        }
+    }
         
         if (!hasCertificate) {
             boolean generated = studentService.generateCertificate(course);

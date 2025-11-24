@@ -113,6 +113,36 @@
                 "resources": ["d"],
                 "title": "d",
                 "content": "d"
+            },
+            {
+                "quiz": null,
+                "hasQuiz": false,
+                "lessonId": 32,
+                "resources": ["fdf"],
+                "title": "fdf",
+                "content": "fdsf"
+            },
+            {
+                "quiz": {
+                    "quizId": 324,
+                    "questions": [{
+                        "questionId": 23,
+                        "text": "sad",
+                        "correctChoice": 1,
+                        "choices": [
+                            "dsa",
+                            "dsad",
+                            "dsad",
+                            "sdasd"
+                        ]
+                    }],
+                    "passingScore": 50
+                },
+                "hasQuiz": true,
+                "lessonId": 324,
+                "resources": ["fsd"],
+                "title": "fdsff",
+                "content": "fsdf"
             }
         ]
     },

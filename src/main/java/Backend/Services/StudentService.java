@@ -172,4 +172,6 @@ public class StudentService {
     public int getQuizAttempts(int courseId, int lessonId) {
         return student.getQuizAttempts(courseId, lessonId);
     }
-}
+public boolean saveStudentProgress() {
+    return users.updateUser(student);
+}}
