@@ -155,7 +155,7 @@ public class Student extends User {
     
     public boolean hasPassedQuiz(int courseId, int lessonId) {
         Double score = getQuizScore(courseId, lessonId);
-        return score != null && score >= 70.0;
+        return score != null && score >= 50.0;
     }
     
     public void incrementQuizAttempts(int courseId, int lessonId) {

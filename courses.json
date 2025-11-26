@@ -1,170 +1,88 @@
 [
     {
         "approvalStatus": "APPROVED",
-        "approvedBy": 4,
-        "description": "we",
-        "students": [
-            3,
-            5
-        ],
-        "title": "q",
+        "approvedBy": 1,
+        "description": "z",
+        "students": [4],
+        "title": "a",
+        "courseId": 1,
+        "instructorId": 2,
+        "lessons": [{
+            "quiz": {
+                "quizId": 1,
+                "questions": [{
+                    "questionId": 32,
+                    "text": "32",
+                    "correctChoice": 0,
+                    "choices": [
+                        "32",
+                        "32",
+                        "32",
+                        "32"
+                    ]
+                }],
+                "passingScore": 50
+            },
+            "hasQuiz": true,
+            "lessonId": 1,
+            "resources": ["s"],
+            "title": "q",
+            "content": "x"
+        }]
+    },
+    {
+        "approvalStatus": "APPROVED",
+        "approvedBy": 1,
+        "description": "x",
+        "students": [],
+        "title": "s",
         "courseId": 2,
-        "instructorId": 1,
+        "instructorId": 2,
         "lessons": [
             {
                 "quiz": {
-                    "quizId": 1,
-                    "questions": [
-                        {
-                            "questionId": 2,
-                            "text": "434",
-                            "correctChoice": 0,
-                            "choices": [
-                                "csd",
-                                "cdsc",
-                                "csdc",
-                                "csdc"
-                            ]
-                        },
-                        {
-                            "questionId": 18,
-                            "text": "skndlsd",
-                            "correctChoice": 1,
-                            "choices": [
-                                "sdkl;",
-                                "sdl;/",
-                                "sdmk;l",
-                                "s,d."
-                            ]
-                        },
-                        {
-                            "questionId": 98,
-                            "text": "skdlm;,",
-                            "correctChoice": 0,
-                            "choices": [
-                                "sk;dl",
-                                "smk;dl",
-                                "sndkl;",
-                                "sndkl"
-                            ]
-                        },
-                        {
-                            "questionId": 101,
-                            "text": "ndskodslk",
-                            "correctChoice": 0,
-                            "choices": [
-                                "sijdkol",
-                                "bsdijk",
-                                "sidjokl",
-                                "snidk"
-                            ]
-                        }
-                    ],
-                    "passingScore": 50
-                },
-                "hasQuiz": true,
-                "lessonId": 1,
-                "resources": ["w"],
-                "title": "w",
-                "content": "w"
-            },
-            {
-                "quiz": {
-                    "quizId": 3,
-                    "questions": [
-                        {
-                            "questionId": 2,
-                            "text": "sax",
-                            "correctChoice": 2,
-                            "choices": [
-                                "sax",
-                                "xsa",
-                                "xas",
-                                "xsa"
-                            ]
-                        },
-                        {
-                            "questionId": 4,
-                            "text": "kdsm",
-                            "correctChoice": 1,
-                            "choices": [
-                                "ksmld",
-                                "ksldm",
-                                "sjkml",
-                                "skdl"
-                            ]
-                        },
-                        {
-                            "questionId": 120,
-                            "text": "kms;dl,;",
-                            "correctChoice": 0,
-                            "choices": [
-                                "snlmd ,.",
-                                "nskld",
-                                "nsm, d",
-                                "sm dnsl"
-                            ]
-                        }
-                    ],
-                    "passingScore": 50
-                },
-                "hasQuiz": true,
-                "lessonId": 3,
-                "resources": ["d"],
-                "title": "d",
-                "content": "d"
-            },
-            {
-                "quiz": null,
-                "hasQuiz": false,
-                "lessonId": 32,
-                "resources": ["fdf"],
-                "title": "fdf",
-                "content": "fdsf"
-            },
-            {
-                "quiz": {
-                    "quizId": 324,
+                    "quizId": 2,
                     "questions": [{
-                        "questionId": 23,
-                        "text": "sad",
-                        "correctChoice": 1,
+                        "questionId": 32,
+                        "text": "323",
+                        "correctChoice": 0,
                         "choices": [
-                            "dsa",
-                            "dsad",
-                            "dsad",
-                            "sdasd"
+                            "32",
+                            "32",
+                            "32",
+                            "32"
                         ]
                     }],
                     "passingScore": 50
                 },
                 "hasQuiz": true,
-                "lessonId": 324,
-                "resources": ["fsd"],
-                "title": "fdsff",
-                "content": "fsdf"
+                "lessonId": 2,
+                "resources": ["c"],
+                "title": "s",
+                "content": "xc"
+            },
+            {
+                "quiz": {
+                    "quizId": 4,
+                    "questions": [{
+                        "questionId": 32,
+                        "text": "32",
+                        "correctChoice": 0,
+                        "choices": [
+                            "323",
+                            "32",
+                            "32",
+                            "32"
+                        ]
+                    }],
+                    "passingScore": 50
+                },
+                "hasQuiz": true,
+                "lessonId": 4,
+                "resources": ["w"],
+                "title": "e",
+                "content": "e"
             }
         ]
-    },
-    {
-        "approvalStatus": "REJECTED",
-        "rejectedBy": 4,
-        "description": "ds",
-        "students": [],
-        "title": "ds",
-        "rejectionReason": "pola",
-        "courseId": 22,
-        "instructorId": 1,
-        "lessons": []
-    },
-    {
-        "approvalStatus": "APPROVED",
-        "approvedBy": 4,
-        "description": "maddet youssef elmofaddala",
-        "students": [3],
-        "title": "programming",
-        "courseId": 12,
-        "instructorId": 19,
-        "lessons": []
     }
 ]
