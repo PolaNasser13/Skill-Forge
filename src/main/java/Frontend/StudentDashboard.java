@@ -4,6 +4,7 @@
  */
 package Frontend;
 
+import Backend.Models.Certificate;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import Backend.Models.Course;
@@ -26,6 +27,7 @@ public class StudentDashboard extends javax.swing.JPanel {
     private DefaultTableModel availableModel;
     private DefaultTableModel enrolledModel;
     private DefaultTableModel lessonsModel;
+    private DefaultTableModel certificatesModel;
     private int selectedCourseId = -1; 
     private String selectedCourseName = ""; 
     
@@ -36,9 +38,11 @@ public class StudentDashboard extends javax.swing.JPanel {
         availableModel = (DefaultTableModel) availableCourseTable.getModel();
         enrolledModel = (DefaultTableModel) enrolledCoursesTable.getModel();
         lessonsModel = (DefaultTableModel) lessonTable.getModel();
+        certificatesModel = (DefaultTableModel) certificatesTable.getModel();
         
         loadAvailableCourses();
         loadEnrolledCourses();
+        loadCertificates();
     }
 
     /**
@@ -61,9 +65,13 @@ public class StudentDashboard extends javax.swing.JPanel {
         jScrollPane3 = new javax.swing.JScrollPane();
         lessonTable = new javax.swing.JTable();
         jLabel3 = new javax.swing.JLabel();
-        incompLessonButton = new javax.swing.JButton();
-        compLessonButton = new javax.swing.JButton();
         btnback = new javax.swing.JButton();
+        getQuizButton = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        certificatesTable = new javax.swing.JTable();
+        jLabel4 = new javax.swing.JLabel();
+        viewAndDownloadCertButton = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setName(""); // NOI18N
 
@@ -139,17 +147,17 @@ public class StudentDashboard extends javax.swing.JPanel {
 
         lessonTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Lesson ID", "Lesson Name", "Completed?"
+                "Lesson ID", "Lesson Name", "Content", "Completed?"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -159,21 +167,7 @@ public class StudentDashboard extends javax.swing.JPanel {
         jScrollPane3.setViewportView(lessonTable);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
-        jLabel3.setText("Lessons");
-
-        incompLessonButton.setText("Mark as incomplete");
-        incompLessonButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                incompLessonButtonActionPerformed(evt);
-            }
-        });
-
-        compLessonButton.setText("Mark as complete");
-        compLessonButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                compLessonButtonActionPerformed(evt);
-            }
-        });
+        jLabel3.setText("Certificates");
 
         btnback.setBackground(new java.awt.Color(255, 0, 0));
         btnback.setForeground(new java.awt.Color(255, 255, 255));
@@ -184,10 +178,58 @@ public class StudentDashboard extends javax.swing.JPanel {
             }
         });
 
+        getQuizButton.setText("Get Quiz");
+        getQuizButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                getQuizButtonActionPerformed(evt);
+            }
+        });
+
+        certificatesTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Certificate ID", "Course ID", "Issue Date"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane4.setViewportView(certificatesTable);
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel4.setText("Lessons");
+
+        viewAndDownloadCertButton.setText("View and Download");
+        viewAndDownloadCertButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                viewAndDownloadCertButtonActionPerformed(evt);
+            }
+        });
+
+        jLabel5.setText("Select lesson first:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(145, 145, 145)
+                .addComponent(enroll)
+                .addGap(326, 326, 326)
+                .addComponent(accesslessons)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 821, Short.MAX_VALUE)
+                .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -196,67 +238,92 @@ public class StudentDashboard extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(42, 42, 42)
                         .addComponent(jLabel2)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(compLessonButton, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(incompLessonButton))
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(84, 84, 84)
+                                .addComponent(jLabel5)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(getQuizButton)
+                                .addGap(45, 45, 45))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(87, 87, 87)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel3)
-                        .addGap(85, 85, 85)))
-                .addContainerGap(17, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(145, 145, 145)
-                .addComponent(enroll)
-                .addGap(326, 326, 326)
-                .addComponent(accesslessons)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnback, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(131, 131, 131))
+                        .addComponent(jLabel1)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addGap(37, 37, 37))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 91, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addGap(96, 96, 96))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(viewAndDownloadCertButton)
+                                .addGap(122, 122, 122))))))
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addContainerGap(1026, Short.MAX_VALUE)
+                    .addComponent(jLabel4)
+                    .addGap(444, 444, 444)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jScrollPane3)
+                                    .addComponent(jScrollPane4))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(viewAndDownloadCertButton)
+                                    .addComponent(getQuizButton)
+                                    .addComponent(jLabel5)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
+                                .addGap(3, 3, 3)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
+                                    .addComponent(jScrollPane1))))
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
-                        .addGap(3, 3, 3)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE)
-                            .addComponent(jScrollPane1)))
+                            .addComponent(enroll)
+                            .addComponent(accesslessons))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 410, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(incompLessonButton)
-                            .addComponent(compLessonButton))))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(enroll)
-                    .addComponent(accesslessons)
-                    .addComponent(btnback))
-                .addContainerGap(15, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnback)))
+                .addContainerGap())
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(10, 10, 10)
+                    .addComponent(jLabel4)
+                    .addContainerGap(505, Short.MAX_VALUE)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void loadAvailableCourses() {
+     private void loadAvailableCourses() {
         availableModel.setRowCount(0);
-        ArrayList<Course> allCourses = studentService.getAllCourses();
-        if (allCourses != null) {
-            for (int i = 0; i < allCourses.size(); i++) {
-                Course course = allCourses.get(i);
+        ArrayList<Course> approvedCourses = studentService.gerApprovedCourses();
+        if (approvedCourses != null) {
+            for (int i = 0; i < approvedCourses.size(); i++) {
+                Course course = approvedCourses.get(i);
                 CourseService courseService = new CourseService(course);
                 availableModel.addRow(new Object[]{
                     course.getCourseId(),
@@ -277,6 +344,11 @@ public class StudentDashboard extends javax.swing.JPanel {
                 CourseService courseService = new CourseService(course);
                 int completed = studentService.getCompletedLessonsCount(course.getCourseId());
                 int total = course.getLessons().size();
+                
+                if (completed == total && total > 0) {
+                    checkAndGenerateCertificate(course);
+                }
+                
                 enrolledModel.addRow(new Object[]{
                     course.getCourseId(),
                     course.getTitle(),
@@ -288,39 +360,106 @@ public class StudentDashboard extends javax.swing.JPanel {
         }
     }
 
-    private void loadLessonsForCourse(int courseId) {
-        lessonsModel.setRowCount(0);
-        Course course = studentService.getCourse(courseId);
-        if (course != null) {
-            ArrayList<Lesson> lessons = course.getLessons();
-            for (int i = 0; i < lessons.size(); i++) {
-                Lesson lesson = lessons.get(i);
-                boolean completed = studentService.isLessonCompleted(courseId, lesson.getLessonId());
+private void loadLessonsForCourse(int courseId) {
+    lessonsModel.setRowCount(0);
+    Course course = studentService.getCourse(courseId);
+    if (course != null) {
+        ArrayList<Lesson> lessons = course.getLessons();
+        
+        for (int i = 0; i < lessons.size(); i++) {
+            Lesson lesson = lessons.get(i);
+            
+            if (!lesson.hasQuiz()) {
+                studentService.getStudent().markLessonCompletedById(courseId, lesson.getLessonId());
+            }
+            
+            if (lesson.hasQuiz()) {
+                boolean completed = studentService.getStudent().isLessonCompleted(courseId, lesson.getLessonId());
                 lessonsModel.addRow(new Object[]{
                     lesson.getLessonId(),
                     lesson.getTitle(),
+                    lesson.getContent(),
                     completed ? "Yes" : "No"
                 });
             }
         }
+        
+        studentService.saveStudentProgress();
+        
+        loadEnrolledCourses();
     }
-    
-    private void accesslessonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accesslessonsActionPerformed
-    int selectedRow = enrolledCoursesTable.getSelectedRow();
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a course first.");
-        return;
-    }
+}
 
-    selectedCourseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
-    selectedCourseName = (String) enrolledModel.getValueAt(selectedRow, 1);
-    loadLessonsForCourse(selectedCourseId);
+private void loadCertificates() {
+    certificatesModel.setRowCount(0);
+    ArrayList<Certificate> certificates = studentService.getCertificates();
+    if (certificates != null) {
+        for (int i = 0; i < certificates.size(); i++) {
+            Certificate cert = certificates.get(i);
+            Course course = studentService.getCourse(cert.getCourseId());
+            String courseName = (course != null) ? course.getTitle() : "Unknown Course";
+            certificatesModel.addRow(new Object[]{
+                cert.getCertificateId(),
+                courseName,  // Show course name instead of course ID
+                cert.getIssueDate()
+            });
+        }
+    }
+}
+
+private void checkAndGenerateCertificate(Course course) {
+    ArrayList<Certificate> certificates = studentService.getCertificates();
+    boolean hasCertificate = false;
     
-    jLabel3.setText("Lessons - " + selectedCourseName);                         
+    for (int i = 0; i < certificates.size(); i++) {
+        Certificate cert = certificates.get(i);
+        if (cert.getCourseId() == course.getCourseId() && 
+            cert.getStudentId() == studentService.getStudent().getUserId()) {
+            hasCertificate = true;
+            break;
+        }
+    }
+    
+    if (!hasCertificate) {
+        boolean generated = studentService.generateCertificate(course);
+        if (generated) {
+            JOptionPane.showMessageDialog(this, 
+                "Congratulations! You've completed the course: " + course.getTitle() + 
+                "\nA certificate has been generated.", 
+                "Course Completed", 
+                JOptionPane.INFORMATION_MESSAGE);
+            loadCertificates(); // Refresh certificates table
+        }
+    }
+        
+        if (!hasCertificate) {
+            boolean generated = studentService.generateCertificate(course);
+            if (generated) {
+                JOptionPane.showMessageDialog(this, 
+                    "Congratulations! You've completed the course: " + course.getTitle() + 
+                    "\nA certificate has been generated.", 
+                    "Course Completed", 
+                    JOptionPane.INFORMATION_MESSAGE);
+                loadCertificates();
+            }
+        }
+    }
+    private void accesslessonsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_accesslessonsActionPerformed
+        int selectedRow = enrolledCoursesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a course first.");
+            return;
+        }
+
+        selectedCourseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
+        selectedCourseName = (String) enrolledModel.getValueAt(selectedRow, 1);
+        loadLessonsForCourse(selectedCourseId);
+        
+        jLabel3.setText("Lessons - " + selectedCourseName);                                                     
     }//GEN-LAST:event_accesslessonsActionPerformed
 
     private void enrollActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enrollActionPerformed
-         int selectedRow = availableCourseTable.getSelectedRow();
+        int selectedRow = availableCourseTable.getSelectedRow();
         if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this, "Please select a course to enroll.");
             return;
@@ -338,82 +477,97 @@ public class StudentDashboard extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_enrollActionPerformed
 
-    private void incompLessonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_incompLessonButtonActionPerformed
-    if (selectedCourseId == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a course first using 'ACCESS LESSONS'.");
-        return;
-    }
-    
-    int selectedLessonRow = lessonTable.getSelectedRow();
-    if (selectedLessonRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
-        return;
-    }
-
-    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
-
-    boolean success = studentService.unmarkLesson(selectedCourseId, lessonId);
-    if (success) {
-        loadLessonsForCourse(selectedCourseId);
-        loadEnrolledCourses();
-        JOptionPane.showMessageDialog(this, "Lesson marked as incomplete.");
-    } else {
-        JOptionPane.showMessageDialog(this, "Failed to mark lesson as incomplete.");
-    }
-
-    }//GEN-LAST:event_incompLessonButtonActionPerformed
-
-    private void compLessonButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_compLessonButtonActionPerformed
-    if (selectedCourseId == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a course first using 'ACCESS LESSONS'.");
-        return;
-    }
-    
-    int selectedLessonRow = lessonTable.getSelectedRow();
-    if (selectedLessonRow == -1) {
-        JOptionPane.showMessageDialog(this, "Please select a lesson first.");
-        return;
-    }
-
-    int lessonId = (Integer) lessonsModel.getValueAt(selectedLessonRow, 0);
-
-    boolean success = studentService.completeLesson(selectedCourseId, lessonId);
-    if (success) {
-        loadLessonsForCourse(selectedCourseId);
-        loadEnrolledCourses();
-        JOptionPane.showMessageDialog(this, "Lesson marked as complete.");
-    } else {
-        JOptionPane.showMessageDialog(this, "Failed to mark lesson as complete.");
-    }       
-    }//GEN-LAST:event_compLessonButtonActionPerformed
-
     private void btnbackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnbackActionPerformed
-    JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
-    currentFrame.dispose();
-    
-    JFrame signinFrame = new JFrame("Sign In");
-    SignIn signinPanel = new SignIn("Student");
-    signinFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-    signinFrame.getContentPane().add(signinPanel);
-    signinFrame.pack();
-    signinFrame.setLocationRelativeTo(null);
-    signinFrame.setVisible(true);    }//GEN-LAST:event_btnbackActionPerformed
+        JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        currentFrame.dispose();
+        
+        JFrame homeFrame = new JFrame("Skill-Forge");
+        homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        homeFrame.getContentPane().add(new Home());
+        homeFrame.pack();
+        homeFrame.setLocationRelativeTo(null);
+    homeFrame.setVisible(true);    }//GEN-LAST:event_btnbackActionPerformed
+
+    private void getQuizButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_getQuizButtonActionPerformed
+        int selectedRow = enrolledCoursesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a course first.");
+            return;
+        }
+
+        int courseId = (Integer) enrolledModel.getValueAt(selectedRow, 0);
+        
+        int selectedLessonRow = lessonTable.getSelectedRow();
+        if (selectedLessonRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a lesson first.");
+            return;
+        }
+
+        Object lessonIdObj = lessonsModel.getValueAt(selectedLessonRow, 0);
+        int lessonId;
+        
+        if (lessonIdObj instanceof Integer) {
+            lessonId = (Integer) lessonIdObj;
+        } else if (lessonIdObj instanceof String) {
+            try {
+                lessonId = Integer.parseInt((String) lessonIdObj);
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(this, "Invalid lesson ID format!");
+                return;
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Unexpected data type for lesson ID!");
+            return;
+        }
+
+        JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+        currentFrame.getContentPane().removeAll();
+        
+        currentFrame.getContentPane().add(new QuizFrame(studentService.getStudent(), courseId, lessonId));
+        currentFrame.revalidate();
+        currentFrame.repaint();
+    }//GEN-LAST:event_getQuizButtonActionPerformed
+
+    private void viewAndDownloadCertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewAndDownloadCertButtonActionPerformed
+         int selectedRow = certificatesTable.getSelectedRow();
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this, "Please select a certificate first.");
+            return;
+        }
+
+        String certId = (String) certificatesModel.getValueAt(selectedRow, 0);
+        Certificate cert = studentService.getCertificateById(certId);
+
+        if (cert != null) {
+            JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+            currentFrame.getContentPane().removeAll();
+            currentFrame.getContentPane().add(new CertificateView(cert));
+            currentFrame.revalidate();
+            currentFrame.repaint();
+        } else {
+            JOptionPane.showMessageDialog(this, "Certificate not found!");
+        }
+    }//GEN-LAST:event_viewAndDownloadCertButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton accesslessons;
     private javax.swing.JTable availableCourseTable;
     private javax.swing.JButton btnback;
-    private javax.swing.JButton compLessonButton;
+    private javax.swing.JTable certificatesTable;
     private javax.swing.JButton enroll;
     private javax.swing.JTable enrolledCoursesTable;
-    private javax.swing.JButton incompLessonButton;
+    private javax.swing.JButton getQuizButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JTable lessonTable;
+    private javax.swing.JButton viewAndDownloadCertButton;
     // End of variables declaration//GEN-END:variables
 }

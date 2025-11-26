@@ -1,61 +1,88 @@
 [
     {
-        "description": "jkdnheiwjnedwk",
-        "students": [1],
-        "title": "Drawing 2",
-        "courseId": 12,
-        "instructorId": 4,
-        "lessons": []
+        "approvalStatus": "APPROVED",
+        "approvedBy": 1,
+        "description": "z",
+        "students": [4],
+        "title": "a",
+        "courseId": 1,
+        "instructorId": 2,
+        "lessons": [{
+            "quiz": {
+                "quizId": 1,
+                "questions": [{
+                    "questionId": 32,
+                    "text": "32",
+                    "correctChoice": 0,
+                    "choices": [
+                        "32",
+                        "32",
+                        "32",
+                        "32"
+                    ]
+                }],
+                "passingScore": 50
+            },
+            "hasQuiz": true,
+            "lessonId": 1,
+            "resources": ["s"],
+            "title": "q",
+            "content": "x"
+        }]
     },
     {
-        "description": "wqw",
-        "students": [5],
-        "title": "wqw",
-        "courseId": 1,
-        "instructorId": 7,
+        "approvalStatus": "APPROVED",
+        "approvedBy": 1,
+        "description": "x",
+        "students": [],
+        "title": "s",
+        "courseId": 2,
+        "instructorId": 2,
         "lessons": [
             {
-                "lessonId": 55,
-                "resources": ["dsd"],
-                "title": "dsd",
-                "content": "sds"
+                "quiz": {
+                    "quizId": 2,
+                    "questions": [{
+                        "questionId": 32,
+                        "text": "323",
+                        "correctChoice": 0,
+                        "choices": [
+                            "32",
+                            "32",
+                            "32",
+                            "32"
+                        ]
+                    }],
+                    "passingScore": 50
+                },
+                "hasQuiz": true,
+                "lessonId": 2,
+                "resources": ["c"],
+                "title": "s",
+                "content": "xc"
             },
             {
-                "lessonId": 323,
-                "resources": ["dsd"],
-                "title": "dsd",
-                "content": "dsd"
-            },
-            {
-                "lessonId": 3233,
-                "resources": ["dsd"],
-                "title": "dsd",
-                "content": "dsd"
+                "quiz": {
+                    "quizId": 4,
+                    "questions": [{
+                        "questionId": 32,
+                        "text": "32",
+                        "correctChoice": 0,
+                        "choices": [
+                            "323",
+                            "32",
+                            "32",
+                            "32"
+                        ]
+                    }],
+                    "passingScore": 50
+                },
+                "hasQuiz": true,
+                "lessonId": 4,
+                "resources": ["w"],
+                "title": "e",
+                "content": "e"
             }
         ]
-    },
-    {
-        "description": "sas",
-        "students": [5],
-        "title": "sas",
-        "courseId": 121,
-        "instructorId": 7,
-        "lessons": []
-    },
-    {
-        "description": "sas",
-        "students": [5],
-        "title": "sas",
-        "courseId": 3,
-        "instructorId": 7,
-        "lessons": []
-    },
-    {
-        "description": "sax",
-        "students": [5],
-        "title": "xsax",
-        "courseId": 77,
-        "instructorId": 7,
-        "lessons": []
     }
 ]
