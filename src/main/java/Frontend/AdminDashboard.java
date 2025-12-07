@@ -4,17 +4,25 @@
  */
 package Frontend;
 
+import javax.swing.JFrame;
+import Backend.Models.Course;
+import Backend.Services.AdminService;
+import Backend.Services.CourseService;
+import java.util.ArrayList;
+
 /**
  *
  * @author pola-nasser13
  */
 public class AdminDashboard extends javax.swing.JPanel {
-
+    private int adminId;
     /**
      * Creates new form AdminDashboard
      */
-    public AdminDashboard() {
+    public AdminDashboard(int adminId) {
+        this.adminId = adminId;
         initComponents();
+        loadPendingCourses();
     }
 
     /**
@@ -26,19 +34,211 @@ public class AdminDashboard extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jToggleButton1 = new javax.swing.JToggleButton();
+        jButton2 = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jTextPane1 = new javax.swing.JTextPane();
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        availableCourseTable = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        btnApprove = new javax.swing.JButton();
+        btnDecline = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
+        auditField = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+
+        jToggleButton1.setText("jToggleButton1");
+
+        jButton2.setText("jButton2");
+
+        jScrollPane2.setViewportView(jTextPane1);
+
+        jLabel1.setText("jLabel1");
+
+        jScrollPane1.setBorder(new javax.swing.border.MatteBorder(null));
+        jScrollPane1.setToolTipText("");
+
+        availableCourseTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Course ID", "Course Name", "Instructor", "Number of Lessons"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(availableCourseTable);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 36)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Pending Courses");
+
+        btnApprove.setText("Approve");
+        btnApprove.addActionListener(this::btnApproveActionPerformed);
+
+        btnDecline.setText("Decline");
+        btnDecline.addActionListener(this::btnDeclineActionPerformed);
+
+        btnBack.setText("Back");
+        btnBack.addActionListener(this::btnBackActionPerformed);
+
+        auditField.addActionListener(this::auditFieldActionPerformed);
+
+        jLabel3.setText("If you are going to decline the course, please write the reason:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(auditField))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(14, 14, 14)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnApprove, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(41, 41, 41)
+                                .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(39, 39, 39)
+                                .addComponent(btnDecline, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 10, Short.MAX_VALUE)))))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(184, 184, 184))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 439, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnApprove, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDecline, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                .addComponent(jLabel3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(auditField, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+private void loadPendingCourses() {
+    javax.swing.table.DefaultTableModel model = (javax.swing.table.DefaultTableModel) availableCourseTable.getModel();
+    model.setRowCount(0);
+    
+    AdminService adminService = new AdminService();
+    ArrayList<Course> pendingCourses = adminService.getPendingCourses();
+    
+    for (int i = 0; i < pendingCourses.size(); i++) {
+        Course course = pendingCourses.get(i);
+        CourseService courseService = new CourseService(course);
+        model.addRow(new Object[]{
+            course.getCourseId(),
+            course.getTitle(),
+            courseService.getInstructorName(),
+            course.getLessons().size()
+        });
+    }
+}
+    private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
+        int selectedRow = availableCourseTable.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a course first.");
+            return;
+        }
+
+        int courseId = (Integer) availableCourseTable.getValueAt(selectedRow, 0);
+
+        AdminService adminService = new AdminService();
+        boolean success = adminService.approveCourse(courseId, adminId);
+
+        if (success) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Course approved successfully!");
+            loadPendingCourses();
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Failed to approve course.");
+        }    }//GEN-LAST:event_btnApproveActionPerformed
+
+    private void btnDeclineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeclineActionPerformed
+        int selectedRow = availableCourseTable.getSelectedRow();
+        if (selectedRow == -1) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please select a course first.");
+            return;
+        }
+
+        String reason = auditField.getText().trim();
+        if (reason.isEmpty()) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Please enter a reason for declining.");
+            return;
+        }
+
+        int courseId = (Integer) availableCourseTable.getValueAt(selectedRow, 0);
+
+        AdminService adminService = new AdminService();
+        boolean success = adminService.rejectCourse(courseId, adminId, reason);
+
+        if (success) {
+            javax.swing.JOptionPane.showMessageDialog(this, "Course declined successfully!");
+            loadPendingCourses();
+            auditField.setText("");
+        } else {
+            javax.swing.JOptionPane.showMessageDialog(this, "Failed to decline course.");
+        }
+    }//GEN-LAST:event_btnDeclineActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+    JFrame currentFrame = (JFrame) javax.swing.SwingUtilities.getWindowAncestor(this);
+    currentFrame.dispose();
+    
+    JFrame homeFrame = new JFrame("Skill-Forge");
+    homeFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    homeFrame.getContentPane().add(new Home());
+    homeFrame.pack();
+    homeFrame.setLocationRelativeTo(null);
+    homeFrame.setVisible(true);    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void auditFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_auditFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_auditFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField auditField;
+    private javax.swing.JTable availableCourseTable;
+    private javax.swing.JButton btnApprove;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnDecline;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextPane jTextPane1;
+    private javax.swing.JToggleButton jToggleButton1;
     // End of variables declaration//GEN-END:variables
 }

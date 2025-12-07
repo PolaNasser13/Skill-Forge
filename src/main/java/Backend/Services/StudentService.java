@@ -2,7 +2,9 @@ package Backend.Services;
 
 import Backend.Database.CourseDatabase;
 import Backend.Database.UserDatabase;
+import Backend.Models.Certificate;
 import Backend.Models.Course;
+import Backend.Models.Lesson;
 import Backend.Models.Student;
 import java.util.ArrayList;
 
@@ -18,10 +20,18 @@ public class StudentService {
         this.student = student;
     }
 
+    public Student getStudent(){
+        return student;
+    }
+    
     public ArrayList<Course> getAllCourses() {
         return courses.getAllCourses();
     }
 
+    public ArrayList<Course> gerApprovedCourses(){
+        return courses.getApprovedCourses();
+    }
+    
     public boolean enrollInCourse(int courseId) {
         boolean enrollStatus = courses.enrollStudent(courseId, student.getUserId());
         if (enrollStatus) {
@@ -30,37 +40,7 @@ public class StudentService {
         }
         return enrollStatus;
     }
-
-    public boolean dropCourse(int courseId) {
-        Course course = courses.getCourseById(courseId);
-        if (course != null) {
-            course.removeStudentById(student.getUserId());
-        }
-        student.dropCourseById(courseId);
-        return users.updateUser(student);
-    }
-
-    public boolean completeLesson(int courseId, int lessonId) {
-        student.markLessonCompletedById(courseId, lessonId);
-        return users.updateUser(student);
-    }
-
-    public boolean unmarkLesson(int courseId, int lessonId) {
-        ArrayList<Integer> completedLessons = student.getCompletedLessonsByCourseId(courseId);
-        boolean removedStatus = false;
-        for (int i = 0; i < completedLessons.size(); i++) {
-            if (completedLessons.get(i) == lessonId) {
-                completedLessons.remove(i);
-                removedStatus = true;
-                break;
-            }
-        }
-        if (removedStatus) {
-            return users.updateUser(student);
-        }
-        return false;
-    }
-
+    
     public ArrayList<Course> getEnrolledCourses() {
         ArrayList<Course> enrolledCourses = new ArrayList<>();
         ArrayList<Integer> enrolledIds = student.getEnrolledCourseIds();
@@ -92,4 +72,106 @@ public class StudentService {
         ArrayList<Integer> completedLessons = student.getCompletedLessonsByCourseId(courseId);
         return completedLessons.size();
     }
-}
+    
+    public ArrayList<Certificate> getCertificates(){
+        return student.getCertificates();
+    }
+    
+    public boolean checkCourseCompletion(Course course){
+        ArrayList<Integer> completedLessons = student.getCompletedLessonsByCourseId(course.getCourseId());
+        ArrayList<Lesson> totalLessons = course.getLessons();
+        if (completedLessons.size() == totalLessons.size()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean addCertificateToStudent(Certificate certificate) {
+        student.addCertificate(certificate);
+        return users.updateUser(student);
+    }
+
+    public boolean generateCertificate(Course course){
+        if (checkCourseCompletion(course)) {
+            String name = student.getUsername();
+            String courseTitle = course.getTitle();
+            CourseService courseService = new CourseService(course);
+            String instructorName = courseService.getInstructorName();
+            String certId = "CERT_" + course.getCourseId() + "_" + student.getUserId() + "_" + System.currentTimeMillis();
+            Certificate certificate = new Certificate(certId, student.getUserId(), course.getCourseId(), 
+                                                    name, courseTitle, instructorName);
+            
+            return addCertificateToStudent(certificate);
+        } else {
+            return false;
+        }
+    }
+    
+    public boolean canAccessLesson(Course c, int lessonId){
+        ArrayList<Lesson> lessons = c.getLessons();
+        int currentLessonIndex = -1;
+        
+        for (int i = 0; i < lessons.size(); i++) {
+            if (lessons.get(i).getLessonId() == lessonId && lessons.get(i).hasQuiz()) {
+                currentLessonIndex = i;
+                break;
+            }
+        }
+        
+        if (currentLessonIndex == 0) {
+            return true;
+        }
+        
+        if (currentLessonIndex > 0) {
+            int previousLessonId = lessons.get(currentLessonIndex - 1).getLessonId();
+            return isLessonCompleted(c.getCourseId(), previousLessonId);
+        }
+        
+        return false;
+    }
+    
+    public boolean submitQuiz(int courseId, int lessonId, double score) {
+        student.setQuizScore(courseId, lessonId, score);
+        boolean updated = users.updateUser(student);
+        
+        if (updated) {
+            Course course = getCourse(courseId);
+            if (course != null && checkCourseCompletion(course)) {
+                generateCertificate(course);
+            }
+        }
+        
+        return updated;
+    }
+    
+    public Certificate getCertificateById(String certificateId) {
+        return student.getCertificateById(certificateId);
+    }
+    
+    public double getCourseCompletionPercentage(int courseId) {
+        Course course = getCourse(courseId);
+        if (course == null) {
+            return 0.0;
+        }
+        
+        int completed = getCompletedLessonsCount(courseId);
+        int total = course.getLessons().size();
+        
+        if (total > 0) {
+            return (completed * 100.0) / total;
+        } else {
+            return 0.0;
+        }
+    }
+    
+    public boolean hasPassedQuiz(int courseId, int lessonId) {
+        return student.hasPassedQuiz(courseId, lessonId);
+    }
+    
+    public int getQuizAttempts(int courseId, int lessonId) {
+        return student.getQuizAttempts(courseId, lessonId);
+    }
+public boolean saveStudentProgress() {
+    return users.updateUser(student);
+}}

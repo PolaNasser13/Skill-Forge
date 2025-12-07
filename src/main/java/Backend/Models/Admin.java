@@ -17,12 +17,12 @@ public class Admin extends User {
         super(j);
     }
     
-    
+   
     @Override
     public String getRole() {
         return "admin";
     }
-   
+ 
     @Override
     public JSONObject toJSON() {
         return super.toJSON();

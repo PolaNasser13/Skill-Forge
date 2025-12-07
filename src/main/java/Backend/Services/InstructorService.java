@@ -5,6 +5,8 @@ import Backend.Database.UserDatabase;
 import Backend.Models.Course;
 import Backend.Models.Instructor;
 import Backend.Models.Lesson;
+import Backend.Models.Question;
+import Backend.Models.Quiz;
 import java.util.ArrayList;
 
 public class InstructorService {
@@ -43,7 +45,7 @@ public class InstructorService {
 
         course.setTitle(title);
         course.setDescription(description);
-        
+
         boolean updateStatus = courses.updateCourse(course);
         if (updateStatus) {
             users.updateUser(instructor);
@@ -68,11 +70,16 @@ public class InstructorService {
         return instructor.getCreatedCourseIds();
     }
 
+    public boolean addLesson(Course c, int lessonId, String title, String content, ArrayList<String> optionalResources, Quiz quiz) {
+        Lesson newLesson = new Lesson(lessonId, title, content, optionalResources, quiz);
+        return courses.addLesson(c.getCourseId(), newLesson);
+    }
+
     public boolean addLesson(Course c, int lessonId, String title, String content, ArrayList<String> optionalResources) {
         Lesson newLesson = new Lesson(lessonId, title, content, optionalResources);
         return courses.addLesson(c.getCourseId(), newLesson);
     }
-
+    
     public boolean updateLesson(int courseId, int oldLessonId, int newLessonId, String title, String content, ArrayList<String> resources) {
         Course course = courses.getCourseById(courseId);
         if (course == null) {
@@ -91,7 +98,7 @@ public class InstructorService {
         lesson.setTitle(title);
         lesson.setContent(content);
         lesson.setResources(resources);
-        
+
         return courses.updateLesson(courseId, lesson);
     }
 
@@ -99,8 +106,62 @@ public class InstructorService {
         return courses.deleteLesson(c.getCourseId(), lessonId);
     }
 
+    public boolean addQuizToLesson(int courseId, int lessonId, int quizId, ArrayList<Question> questions) {
+        Course course = getCourseById(courseId);
+        if (course == null) {
+            return false;
+        }
+
+        Lesson lesson = course.getLessonById(lessonId);
+        if (lesson == null) {
+            return false;
+        }
+
+        Quiz quiz = new Quiz(quizId, 50);
+        for (int i = 0; i < questions.size(); i++) {
+            quiz.addQuestion(questions.get(i));
+        }
+
+        lesson.addQuiz(quiz);
+
+        boolean updateStatus = courses.updateLesson(courseId, lesson);
+        return updateStatus;
+    }
+
+    public boolean updateQuiz(int courseId, int lessonId, int quizId, ArrayList<Question> questions) {
+        Course course = getCourseById(courseId);
+        if (course == null) {
+            return false;
+        }
+
+        Lesson lesson = course.getLessonById(lessonId);
+        if (lesson == null) {
+            return false;
+        }
+
+        Quiz quiz = new Quiz(quizId, 50);
+        for (int i = 0; i < questions.size(); i++) {
+            quiz.addQuestion(questions.get(i));
+        }
+
+        lesson.setQuiz(quiz);
+        boolean updateStatus = courses.updateLesson(courseId, lesson);
+        return updateStatus;
+    }
+
     public ArrayList<Lesson> getLessons(Course c) {
         return c.getLessons();
+    }
+
+    public ArrayList<Lesson> getLessonsWithQuizzes(Course c) {
+        ArrayList<Lesson> totalLessons = c.getLessons();
+        ArrayList<Lesson> lessonsWithQuizzes = new ArrayList<Lesson>();
+        for (int i = 0; i < totalLessons.size(); i++) {
+            if (totalLessons.get(i).hasQuiz()) {
+                lessonsWithQuizzes.add(totalLessons.get(i));
+            }
+        }
+        return lessonsWithQuizzes;
     }
 
     public ArrayList<Integer> getEnrolledStudentsIds(Course c) {
